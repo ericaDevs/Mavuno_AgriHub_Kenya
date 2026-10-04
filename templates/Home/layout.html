@@ -1,0 +1,73 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Home{% endblock %} | Mavuno Agrihub</title>
+        <link href="{% static 'style/output.css' %}" rel="stylesheet">
+    </head>
+    <body class="min-h-screen bg-agri-cream font-sans text-agri-forest antialiased">
+        <header class="absolute inset-x-0 top-0 z-10 pt-7 sm:pt-9">
+            <nav aria-label="Main navigation" class="flex w-full items-center justify-between">
+                <a class="text-lg font-extrabold px-4 tracking-wide text-white sm:text-xl" href="{% url 'home' %}#home">MAVUNO AGRIHUB</a>
+                <div class="hidden items-center gap-8 text-sm font-medium text-white md:flex">
+                    <a class="transition hover:text-agri-harvest" href="{% url 'home' %}">Home</a>
+                    <a class="transition hover:text-agri-harvest" href="{% url 'catalog' %}">Catalog</a>
+                    <a class="transition hover:text-agri-harvest" href="{% url 'services' %}">Services</a>
+                    <a class="transition hover:text-agri-harvest" href="{% url 'about' %}">About</a>
+                    <a class="transition hover:text-agri-harvest" href="{% url 'contacts' %}">Contact</a>
+                </div>
+
+                <div class="flex items-center gap-4 px-8">
+                    <a class="rounded-full border border-agri-harvest text-sm font-bold text-white transition hover:bg-agri-harvest hover:text-agri-forest" href="{% url 'home' %}#contact">
+                        Get Started
+                    </a>
+
+                    <a class="rounded-full border border-agri-harvest text-sm font-bold text-white transition hover:bg-agri-harvest hover:text-agri-forest" href="{% url 'home' %}#contact">
+                        Sign In
+                    </a>
+
+                    <a class="relative rounded-full p-2 text-agri-forest bg-agri-harvest">
+                        <i data-lucide="shopping-cart"></i>  
+                    </a>
+                </div>
+                
+            </nav>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer id="contact" class="bg-agri-forest text-white">
+            <div class="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-12 sm:px-10 md:flex-row md:items-end md:justify-between">
+                <div id="about">
+                    <a class="text-lg font-extrabold tracking-wide" href="{% url 'home' %}#home">MAVUNO AGRIHUB</a>
+                    <p class="mt-3 max-w-sm text-sm leading-6 text-agri-cream/80">
+                        Connecting farmers to the knowledge, resources, and markets that help agriculture thrive.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-x-6 gap-y-3 text-sm text-agri-cream/80">
+                    <a class="transition hover:text-agri-harvest" href="{% url 'home' %}">Home</a>
+                    <a class="transition hover:text-agri-harvest" href="{% url 'services' %}">Services</a>
+                    <a class="transition hover:text-agri-harvest" href="{% url 'about' %}">About</a>
+                    <a class="transition hover:text-agri-harvest" href="{% url 'contacts' %}">Contact</a>
+                </div>
+                <p class="text-xs text-agri-cream/70">© {% now "Y" %} Mavuno AgriHub Kenya. All rights reserved.</p>
+            </div>
+        </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        if (window.lucide && typeof window.lucide.createIcons === "function") {
+          lucide.createIcons({ attrs: { width: 16, height: 16 } });
+        } else {
+          console.warn("Lucide failed to load");
+        }
+      });
+    </script>
+    <script src="{% static 'scripts/script.js' %}"></script>
+    </body>
+</html>

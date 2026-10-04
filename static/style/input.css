@@ -1,0 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --color-agri-forest: #003725;
+  --color-agri-leaf: #5b8c36;
+  --color-agri-harvest: #e7b844;
+  --color-agri-cream: #f5f3e8;
+}
