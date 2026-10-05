@@ -1,10 +1,105 @@
-{% extends 'home/layout.html' %}
+{% extends "Home/layout.html" %}
 
-{%  block title %}
-    Contact Us
-{% endblock %}
+{% block title %}Contact Us{% endblock %}
 
 {% block content %}
-    <h1>Contact Us</h1>
-    <p>Welcome to our contact page!</p>
+    <section class="relative overflow-hidden bg-agri-forest px-6 pb-9 pt-32 text-center sm:px-10 sm:pb-11 sm:pt-36">
+        <div aria-hidden="true" class="absolute -left-10 bottom-0 h-36 w-36 rounded-full border border-white/5"></div>
+        <div aria-hidden="true" class="absolute -right-8 bottom-0 h-24 w-24 rounded-full bg-white/5"></div>
+        <div class="relative mx-auto max-w-3xl">
+            <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Contact Us</h1>
+            <p class="mt-2 text-xs font-semibold text-agri-cream/85">
+                <a class="transition hover:text-agri-harvest" href="{% url 'home' %}">Home</a>
+                <span class="mx-2 text-agri-harvest">›</span>
+                Contact Us
+            </p>
+        </div>
+    </section>
+
+    <section aria-label="Mavuno AgriHub farmland" class="relative h-64 bg-cover bg-center sm:h-80"
+        style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2200&q=85');">
+        <div aria-hidden="true" class="absolute inset-0 bg-agri-forest/20"></div>
+        <div class="absolute inset-x-0 bottom-0 z-10 mx-auto grid max-w-5xl translate-y-1/2 grid-cols-1 divide-y divide-white/15 bg-agri-leaf px-5 py-4 text-white shadow-xl sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-6 sm:py-5">
+            <div class="flex items-center gap-3 py-3 sm:px-4 sm:py-1">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-agri-harvest text-agri-forest" aria-hidden="true">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75A2.25 2.25 0 0 1 4.5 4.5h2.4a1.5 1.5 0 0 1 1.46 1.15l.65 2.6a1.5 1.5 0 0 1-.74 1.67l-1.6.92a12 12 0 0 0 5.5 5.5l.92-1.6a1.5 1.5 0 0 1 1.67-.74l2.6.65a1.5 1.5 0 0 1 1.15 1.46v2.4a2.25 2.25 0 0 1-2.25 2.25h-1.5C8.13 20.75 3.25 15.87 3.25 9v-2.25Z" /></svg>
+                </span>
+                <div>
+                    <h2 class="text-base font-extrabold">Farm support</h2>
+                    <p class="mt-0.5 text-base text-agri-cream/75">Here to help you grow</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 py-3 sm:px-4 sm:py-1">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-agri-harvest text-agri-forest" aria-hidden="true">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s7-5.1 7-12a7 7 0 1 0-14 0c0 6.9 7 12 7 12Z" /><circle cx="12" cy="9" r="2.25" /></svg>
+                </span>
+                <div>
+                    <h2 class="text-base font-extrabold">Location</h2>
+                    <p class="mt-0.5 text-base text-agri-cream/75">Supporting farmers across Kenya</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 py-3 sm:px-4 sm:py-1">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-agri-harvest text-agri-forest" aria-hidden="true">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75 12 13l8.25-6.25M5.25 5.25h13.5A2.25 2.25 0 0 1 21 7.5v9a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 16.5v-9a2.25 2.25 0 0 1 2.25-2.25Z" /></svg>
+                </span>
+                <div>
+                    <h2 class="text-base font-extrabold">Get in touch</h2>
+                    <p class="mt-0.5 text-base text-agri-cream/75">We'd love to hear from you</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-[#fffaf8] px-6 pb-16 pt-28 sm:px-10 sm:pb-20 sm:pt-32">
+        <div class="mx-auto max-w-3xl text-center">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-agri-harvest">Get in touch</p>
+            <h2 class="mt-2 text-3xl font-extrabold tracking-tight text-agri-forest sm:text-4xl">Contact Form</h2>
+        </div>
+
+        <div class="mx-auto mt-8 max-w-4xl bg-agri-forest px-6 py-8 shadow-xl sm:px-12 sm:py-10">
+            <form method="post" action="{% url 'contacts' %}">
+                {% csrf_token %}
+                <div class="grid gap-4 sm:grid-cols-2 sm:gap-x-7">
+                    <label class="block">
+                        <span class="sr-only">Your full name</span>
+                        <input type="text" name="name" autocomplete="name" placeholder="Enter your full name" class="w-full border-b border-white/30 bg-transparent px-1 py-3 text-sm text-white outline-none placeholder:text-agri-cream/65 focus:border-agri-harvest">
+                    </label>
+                    <label class="block">
+                        <span class="sr-only">Your email</span>
+                        <input type="email" name="email" autocomplete="email" placeholder="Enter your email" class="w-full border-b border-white/30 bg-transparent px-1 py-3 text-sm text-white outline-none placeholder:text-agri-cream/65 focus:border-agri-harvest">
+                    </label>
+                    <label class="block">
+                        <span class="sr-only">Your phone number</span>
+                        <input type="tel" name="phone" autocomplete="tel" placeholder="Enter your phone number" class="w-full border-b border-white/30 bg-transparent px-1 py-3 text-sm text-white outline-none placeholder:text-agri-cream/65 focus:border-agri-harvest">
+                    </label>
+                    <label class="block">
+                        <span class="sr-only">Subject</span>
+                        <input type="text" name="subject" placeholder="Your subject" class="w-full border-b border-white/30 bg-transparent px-1 py-3 text-sm text-white outline-none placeholder:text-agri-cream/65 focus:border-agri-harvest">
+                    </label>
+                    <label class="block sm:col-span-2">
+                        <span class="sr-only">Your message</span>
+                        <textarea name="message" rows="3" placeholder="Type your message" class="w-full resize-y border-b border-white/30 bg-transparent px-1 py-3 text-sm text-white outline-none placeholder:text-agri-cream/65 focus:border-agri-harvest"></textarea>
+                    </label>
+                </div>
+                <div class="mt-7 flex justify-center">
+                    <button type="submit" class="inline-flex items-center justify-center rounded-full border border-agri-harvest px-6 py-2.5 text-xs font-extrabold text-agri-harvest transition hover:bg-agri-harvest hover:text-agri-forest">
+                        Send Message
+                    </button>
+                </div>
+            </form>
+            <div class="mt-8 border-t border-white/15 pt-6 text-center">
+                <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-agri-cream/70">Explore Mavuno AgriHub</p>
+                <div class="mt-4 flex flex-col justify-center gap-3 sm:flex-row">
+                <a href="{% url 'services' %}" class="inline-flex items-center justify-center rounded-full border border-agri-harvest px-7 py-3 text-sm font-extrabold text-agri-harvest transition hover:bg-agri-harvest hover:text-agri-forest">
+                    Explore our services
+                </a>
+                <a href="{% url 'catalog' %}" class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-7 py-3 text-sm font-extrabold text-agri-forest transition hover:bg-white">
+                    Browse the catalog
+                </a>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
