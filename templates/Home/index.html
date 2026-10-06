@@ -1,117 +1,359 @@
-{% extends "Home/layout.html" %}
-{% block title %}
-    Home
-{% endblock %}
+<!doctype html>
+{% load static %}
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mavuno AgriHub Kenya | Agriculture & Farming Solutions</title>
+  <meta name="description" content="Clean, responsive agricultural and farming website built with Nunito typography and Tailwind CSS." />
+  
+  <!-- Google Font: Nunito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 
-{% block content %}
-    <section id="home" class="relative isolate flex min-h-180 items-center justify-center bg-cover bg-center px-6 pb-16 pt-32 text-center sm:px-10 sm:pb-20"
-        style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2400&q=85');">
-        <div aria-hidden="true" class="absolute inset-0 -z-10 bg-agri-forest/80"></div>
-        <div class="mx-auto w-full max-w-4xl">
-            <div id="services" class="mx-auto max-w-3xl">
-                <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-agri-harvest">Growing a stronger agricultural future</p>
-                <h1 class="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-                    Better opportunities for every farmer.
-                </h1>
-                <p class="mx-auto mt-5 max-w-2xl text-base leading-7 text-agri-cream sm:text-lg">
-                    Mavuno Agrihub empowers farming communities with practical support, trusted resources, and connections to markets.
-                </p>
-                <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                    <a class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-7 py-3.5 text-sm font-extrabold text-agri-forest transition hover:bg-white" href="#services">
-                        Explore our services
-                    </a>
-                    <a class="inline-flex items-center justify-center rounded-full border border-white/80 px-7 py-3.5 text-sm font-extrabold text-white transition hover:bg-white hover:text-agri-forest" href="#contact">
-                        Partner with us
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            'agri-forest': '#003725',
+            'agri-leaf': '#5b8c36',
+            'agri-harvest': '#e7b844',
+            'agri-cream': '#f5f3e8',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-agri-cream text-neutral-800 antialiased selection:bg-agri-leaf selection:text-white">
 
-    
-    <section class="max-w-7xl w-full mx-auto relative my-8 p-12">
+  <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-neutral-200">
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-20 flex items-center justify-between">
+            <!-- Zone 1: Brand Wordmark -->
+            <a href="{% url 'home' %}" class="flex items-center gap-2 text-2xl font-black text-agri-forest tracking-tight">
+                Mavuno AgriHub Kenya
+            </a>
 
-        <!-- Main Grid Container -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <!-- Zone 2: Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-bold text-neutral-600">
+                <a href="{% url 'home' %}" class="hover:text-agri-forest transition-colors">Home</a>
+                <a href="{% url 'catalog' %}" class="hover:text-agri-forest transition-colors">Catalog</a>
+                <a href="{% url 'services' %}" class="hover:text-agri-forest transition-colors">What We Offer</a>
+                <a href="{% url 'about' %}" class="hover:text-agri-forest transition-colors">Who We Are</a>
+                <a href="{% url 'contacts' %}" class="hover:text-agri-forest transition-colors">Contact Us</a>
+            </nav>
 
-        <div class="lg:col-span-6 xl:col-span-6 relative">
-            
-            <!-- Left Column: Farmer / Agronomist Image -->
-            <div class="relative rounded-2xl overflow-hidden shadow-xl aspect-4/3 sm:aspect-14/11 lg:aspect-4/3 xl:aspect-4/3">
-            <img src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?q=80&w=1200&auto=format&fit=crop" alt="Kenyan Agronomist displaying healthy harvested produce in greenhouse" class="w-full h-full object-cover object-center transform hover:scale-105 transition duration-700 ease-out"/>
-            <!-- Subtle overlay gradient for rich contrast -->
-            <div class="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent"></div>
-            </div>
+            <!-- Zone 3: Primary Action -->
+            <div class="flex items-center gap-4">
+                <a href="{% url 'contacts' %}" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
+                    Get Started
+                </a>
 
-            <!-- Overlapping Cards Row (Desktop/Tablet Overlay & Mobile Responsive Grid) -->
-            <div class="sm:-mt-20 sm:translate-y-8 sm:ml-auto md:-mt-36 relative z-20 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl sm:max-w-lg lg:max-w-xl mx-auto sm:mr-0">
-            
-                <!-- Card 1: Our Vision (Verde Orvalho / Dark Green) -->
-                <div class="bg-agri-leaf text-white p-6 sm:p-7 rounded-2xl shadow-xl flex flex-col justify-between border border-emerald-900/40">
-                    <div>
-                    <!-- Custom Sprout / Plant Hand Icon -->
-                    <div class="w-10 h-10 mb-4 rounded-lg flex items-center justify-center text-mavuno-light">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8m0 0C10.5 10 7 9 3 9.5C3.5 14.5 7 17 12 13zm0 0c1.5-3 5-4 9-3.5c-.5 5-4 7.5-9 3.5z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2 tracking-tight text-white">Our Vision</h3>
-                    <p class="text-xs sm:text-sm text-emerald-100/80 leading-relaxed font-normal">
-                        To transform Kenyan agriculture into a thriving, technology-driven ecosystem that empowers smallholder farmers and guarantees sustainable food security.
-                    </p>
-                    </div>
-                </div>
-
-                <!-- Card 2: Our Mission (Verde Grama / Mid Green) -->
-                <div class="bg-agri-leaf text-white p-6 sm:p-7 rounded-2xl shadow-xl flex flex-col justify-between">
-                    <div>
-                    <!-- Custom Globe / Ecosystem Icon -->
-                    <div class="w-10 h-10 mb-4 rounded-lg flex items-center justify-center text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8M12 3a15.3 15.3 0 014 9 15.3 15.3 0 01-4 9 15.3 15.3 0 01-4-9 15.3 15.3 0 014-9z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2 tracking-tight text-white">Our Mission</h3>
-                    <p class="text-xs sm:text-sm text-emerald-50 leading-relaxed font-normal">
-                        Bridging the gap between Kenyan growers and modern markets by offering certified farm inputs, agronomical advice, and seamless direct trade solutions.
-                    </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="lg:col-span-6 xl:col-span-6 lg:pl-8 xl:pl-12 mt-6 lg:mt-0">
-            
-            <!-- Category Badge / Subtitle -->
-            <span class="text-mavuno-green text-xs sm:text-sm font-extrabold uppercase tracking-widest block mb-3">
-            WHO WE ARE
-            </span>
-
-            <!-- Main Heading -->
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-mavuno-dark tracking-tight leading-tight mb-6">
-            The Story Behind Mavuno AgriHub's Agricultural Excellence
-            </h2>
-
-            <!-- Descriptive Paragraphs -->
-            <div class="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
-            <p>
-                Founded in the heart of Kenya, Mavuno AgriHub was established to revolutionize how local agricultural supply chains operate. We connect farmers directly with high-grade certified inputs, smart farming technologies, and direct market access for their produce.
-            </p>
-            <p>
-                Through tailored agronomy consultation and climate-smart farm management tools, we empower thousands of smallholder and commercial farmers across East Africa to maximize yield, minimize post-harvest loss, and build sustainable agricultural livelihoods.
-            </p>
-            </div>
-
-            <!-- Optional Call to Action Button matching Palette -->
-            <div class="mt-8">
-                <a href="#about" class="inline-flex items-center gap-2 text-agri-forest bg-agri-harvest hover:bg-agri-forest hover:text-white font-semibold px-6 py-3.5 rounded-xl shadow-md hover:shadow-lg transition duration-200">
-                    <span>Discover Our Solutions</span>
+                <a href="{% url 'contacts' %}" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
+                    Sign In
                 </a>
             </div>
-
         </div>
+    </header>
 
+
+    <main>
+        <!-- HERO SECTION -->
+        <section id="home" class="relative isolate flex min-h-140 sm:min-h-160 items-center justify-center overflow-hidden bg-cover bg-center px-6 pb-16 pt-24 text-center sm:px-10 sm:pb-20"
+            style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2400&q=85');">
+            <div aria-hidden="true" class="absolute inset-0 bg-agri-forest/80"></div>
+            <div class="relative z-10 mx-auto w-full max-w-4xl">
+                <div class="mx-auto max-w-3xl">
+                    <p class="text-xs sm:text-sm font-extrabold uppercase tracking-[0.24em] text-agri-harvest">Growing a stronger agricultural future</p>
+                    <h1 class="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl text-balance">
+                        Better opportunities for every farmer.
+                    </h1>
+                    <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-agri-cream/90 sm:text-lg">
+                        Mavuno AgriHub empowers farming communities with practical support, trusted resources, and direct connections to markets.
+                    </p>
+                    <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                        <a class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-7 py-3.5 text-sm font-extrabold text-agri-forest transition hover:bg-white shadow-md hover:shadow-lg active:scale-95 cursor-pointer" href="{% url 'services' %}">
+                            Explore our services
+                        </a>
+                        <a class="inline-flex items-center justify-center rounded-full border border-white/80 px-7 py-3.5 text-sm font-extrabold text-white transition hover:bg-white hover:text-agri-forest shadow-md hover:shadow-lg active:scale-95 cursor-pointer" href="{% url 'contacts' %}">
+                            Partner with us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================== REMOVED SECTION ==================== -->
+
+        <section class="relative overflow-hidden bg-agri-cream py-20 lg:py-28">
+            <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-[radial-gradient(#5b8c36_1px,transparent_1px)] opacity-15 [bg-size:24px_24px]"></div>
+            <div class="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-12">
+                <div class="space-y-6 lg:col-span-5">
+                    <h2 class="text-3xl font-extrabold leading-[1.15] tracking-tight text-agri-forest sm:text-4xl lg:text-5xl">
+                        Where Farming Meets Excellence
+                    </h2>
+                    <p class="text-base leading-relaxed text-neutral-600 sm:text-lg">
+                        At Mavuno AgriHub, we believe agricultural excellence is achieved through high-grade certified inputs, modern agronomic knowledge, and climate-smart farming practices that protect soil health for generations.
+                    </p>
+                    <p class="text-base leading-relaxed text-neutral-600 sm:text-lg">
+                        Whether you cultivate family acreage or operate commercial greenhouses, our dedicated agronomy team works side-by-side with you to ensure higher yields, healthier produce, and dependable market access.
+                    </p>
+                    <div class="pt-2">
+                        <a href="{% url 'about' %}" class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-8 py-3.5 text-base font-bold text-agri-forest shadow-sm transition duration-200 hover:bg-[#d8a937] hover:shadow-md active:scale-95">
+                            Discover More
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div class="group relative overflow-hidden rounded-2xl bg-agri-cream shadow-sm sm:col-span-2">
+                            <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80" alt="Hands holding fresh organic lettuce" class="h-56 w-full object-cover object-center transition-transform duration-500 group-hover:scale-105 sm:h-64">
+                            <div class="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-1.5 shadow-md backdrop-blur-sm">
+                                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-agri-leaf text-xs font-black text-white">✓</span>
+                                <span class="text-xs font-bold text-agri-forest sm:text-sm">Quality Standards</span>
+                            </div>
+                        </div>
+
+                        <div class="group relative overflow-hidden rounded-2xl bg-agri-cream shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80" alt="Gardener planting seedlings in organic soil" class="h-52 w-full object-cover object-center transition-transform duration-500 group-hover:scale-105 sm:h-60">
+                            <div class="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 shadow-md backdrop-blur-sm">
+                                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-agri-leaf text-xs font-black text-white">✓</span>
+                                <span class="text-xs font-bold text-agri-forest sm:text-sm">Organic Services</span>
+                            </div>
+                        </div>
+
+                        <div class="group relative overflow-hidden rounded-2xl bg-agri-cream shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=800&q=80" alt="Agricultural specialist in a greenhouse" class="h-52 w-full object-cover object-center transition-transform duration-500 group-hover:scale-105 sm:h-60">
+                            <div class="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 shadow-md backdrop-blur-sm">
+                                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-agri-leaf text-xs font-black text-white">✓</span>
+                                <span class="text-xs font-bold text-agri-forest sm:text-sm">Agriculture Leader</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================== ABOUT US ==================== -->
+        <section class="bg-agri-cream px-6 py-14 sm:px-8 sm:py-18 lg:px-12 lg:py-20">
+            <div class="mx-auto grid max-w-7xl items-center gap-8 md:grid-cols-2 lg:grid-cols-12 lg:gap-10">
+                <div class="relative overflow-hidden rounded-3xl shadow-lg md:col-span-1 lg:col-span-5">
+                    <img src="{% static 'images/growing together.jpg' %}" alt="growing together" class="h-72 w-full object-cover sm:h-96 lg:h-100"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-agri-forest/65 via-transparent to-transparent"></div>
+                    <div class="absolute bottom-5 left-5 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-extrabold text-agri-forest shadow-md">
+                        <i data-lucide="sprout" class="h-4 w-4 text-agri-leaf" aria-hidden="true"></i>
+                        Growing together
+                    </div>
+                </div>
+
+                <div class="md:col-span-1 lg:col-span-4">
+                    <p class="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.2em] text-agri-leaf">
+                        About Mavuno
+                    </p>
+                    <h2 class="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-agri-forest sm:text-4xl">
+                        We’re here to support our farmers
+                    </h2>
+                    <p class="mt-4 text-base leading-7 text-agri-forest/70">
+                        Mavuno AgriHub brings trusted farm essentials, practical growing guidance, and market connections together, helping Kenyan farmers make confident decisions throughout the season.
+                    </p>
+                    <a href="{% url 'about' %}" class="mt-6 inline-flex items-center gap-2 rounded-full bg-agri-forest px-5 py-3 text-sm font-extrabold text-white shadow-sm transition hover:bg-agri-leaf">
+                        Learn more
+                        <i data-lucide="arrow-right" class="h-4 w-4" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+                <div class="grid gap-3 rounded-3xl border border-agri-leaf/10 bg-white p-4 shadow-sm sm:grid-cols-2 md:col-span-2 lg:col-span-3 lg:grid-cols-1 lg:p-5">
+                    <div class="flex items-center gap-4 rounded-2xl bg-agri-cream/70 p-4">
+                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-agri-leaf/10 text-agri-leaf">
+                            <i data-lucide="leaf" class="h-5 w-5" aria-hidden="true"></i>
+                        </span>
+                        <span>
+                            <strong class="block text-sm font-extrabold text-agri-forest">Trusted essentials</strong>
+                            <span class="mt-0.5 block text-xs text-agri-forest/65">Quality farm inputs</span>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-4 rounded-2xl bg-agri-cream/70 p-4">
+                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-agri-harvest/25 text-agri-forest">
+                            <i data-lucide="users-round" class="h-5 w-5" aria-hidden="true"></i>
+                        </span>
+                        <span>
+                            <strong class="block text-sm font-extrabold text-agri-forest">Farmer focused</strong>
+                            <span class="mt-0.5 block text-xs text-agri-forest/65">Support shaped around you</span>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-4 rounded-2xl bg-agri-cream/70 p-4">
+                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-agri-forest/10 text-agri-forest">
+                            <i data-lucide="shield-check" class="h-5 w-5" aria-hidden="true"></i>
+                        </span>
+                        <span>
+                            <strong class="block text-sm font-extrabold text-agri-forest">Practical guidance</strong>
+                            <span class="mt-0.5 block text-xs text-agri-forest/65">Knowledge for every season</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <!-- ================== OUR FEATURED PRODUCTS ==================== -->
+        <section class="relative py-16 lg:py-20 bg-white overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center">
+                <span class="text-agri-leaf font-bold tracking-widest text-xs uppercase block mb-2">
+                    DISCOVER OUR TOP PRODUCTS
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-agri-forest tracking-tight">
+                    Quality Inputs for Higher Agricultural Yields
+                </h2>
+                <p class="mt-3 text-neutral-600 max-w-2xl mx-auto text-base sm:text-lg">
+                    Explore our curated catalog of certified seeds, organic fertilizers, crop protection, and modern farming equipment.
+                </p>
+                <div class="mt-6">
+                    <a href="{% url 'catalog' %}" class="inline-flex items-center justify-center rounded-full bg-agri-forest px-7 py-3 text-sm font-bold text-white shadow-sm hover:bg-agri-leaf transition-all duration-200">
+                        View Product Catalog
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <!-- ================== WHO WE ARE ==================== -->
+        <section id="story" class="relative py-20 lg:py-28 bg-agri-cream overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                    
+                    <!-- Left Column: Gardener with Tray Portrait Image -->
+                    <div class="lg:col-span-5 relative">
+                        <div class="relative rounded-3xl overflow-hidden shadow-xl bg-white max-w-md mx-auto lg:max-w-none">
+                            <img src="https://i.pinimg.com/736x/17/8d/9b/178d9bd35d762085f2a6e234c9848064.jpg" alt="tractor" class="w-full h-115 sm:h-130 object-cover object-center"/>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Who We Are & Vision/Mission Cards -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- Eyebrow Tag -->
+                        <div>
+                        <span class="text-agri-leaf font-bold tracking-widest text-xs uppercase">
+                            WHO WE ARE
+                        </span>
+                        </div>
+
+                        <!-- Main Heading -->
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-agri-forest tracking-tight leading-[1.15] text-balance">
+                        The Story Behind Mavuno AgriHub's Agricultural Excellence
+                        </h2>
+
+                        <!-- Description Paragraph -->
+                        <p class="text-neutral-600 text-base sm:text-lg leading-relaxed">
+                        Founded with a commitment to empowering growers across East Africa, Mavuno AgriHub connects farmers with certified inputs, climate-resilient practices, and direct routes to modern markets. We nurture agricultural potential from seed to harvest.
+                        </p>
+
+                        <!-- Vision and Mission Cards Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-4">
+                        
+                        <!-- Our Vision Card (Dark Forest Green) -->
+                        <div class="bg-agri-forest border border-emerald-900/40 text-white rounded-2xl p-6 shadow-md hover:-translate-y-1 transition-transform duration-300">
+                            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-agri-harvest mb-4">
+                            <!-- Seedling / Sprout SVG Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v8m0 0a4 4 0 01-4-4V5a4 4 0 018 0v1a4 4 0 01-4 4zm0 0v12m-6-3a6 6 0 0112 0" />
+                            </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Our Vision</h3>
+                            <p class="text-emerald-100/85 text-sm leading-relaxed">
+                            To transform agriculture into a thriving, sustainable, and tech-driven ecosystem that empowers farming communities and ensures food security.
+                            </p>
+                        </div>
+
+                        <!-- Our Mission Card (Vibrant Leaf Green) -->
+                        <div class="bg-agri-leaf text-white rounded-2xl p-6 shadow-md hover:-translate-y-1 transition-transform duration-300">
+                            <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-white mb-4">
+                            <!-- Globe / Ecosystem SVG Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                            </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Our Mission</h3>
+                            <p class="text-white/90 text-sm leading-relaxed">
+                            To bridge the gap between growers and markets through certified high-grade inputs, practical agronomy guidance, and transparent trade solutions.
+                            </p>
+                        </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================== CTA SECTION ==================== -->
+        <section class="relative w-full overflow-hidden bg-agri-forest py-20 sm:py-24 lg:py-28">
+            <!-- Background Image with Scrim -->
+            <img src="https://i.pinimg.com/736x/48/cb/b2/48cbb255f95d77aece6b5a3655b5e27e.jpg" alt="Farmer tending lush agricultural crops in field" class="absolute inset-0 h-full w-full object-cover object-right md:object-center" />
+            <!-- Gradient Overlay: darker on the left for maximum text legibility while revealing the farmer on the right -->
+            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/40 sm:from-black/85 sm:via-black/55 sm:to-black/20"></div>
+
+            <!-- Content Container (Left Aligned as shown in design) -->
+            <div class="relative z-10 mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+                <div class="max-w-xl text-left">
+                    <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl leading-[1.15]">
+                        Taste the Difference, Discover True Agriculture
+                    </h2>
+                    <p class="mt-4 text-base sm:text-lg leading-relaxed text-white/90 font-normal">
+                        Mavuno AgriHub Kenya is dedicated to empowering farmers through access to quality agricultural inputs, modern farming technologies, and practical agronomic support. Join our thriving network of growers cultivating healthier harvests and sustainable futures.
+                    </p>
+                    <div class="mt-8">
+                        <a href="{% url 'about' %}" class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-8 py-3.5 text-base font-bold text-agri-forest shadow-lg transition-all duration-300 hover:bg-white hover:text-agri-forest hover:shadow-xl active:scale-95 cursor-pointer">
+                            Discover More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- CLEAN FOOTER -->
+    <footer id="contact" class="bg-agri-forest text-white">
+        <div class="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-12 sm:px-10 md:flex-row md:items-end md:justify-between">
+            <div id="about">
+                <a class="text-lg font-extrabold tracking-wide" href="{% url 'home' %}#home">MAVUNO AGRIHUB</a>
+                <p class="mt-3 max-w-sm text-sm leading-6 text-agri-cream/80">
+                    Connecting farmers to the knowledge, resources, and markets that help agriculture thrive.
+                </p>
+            </div>
+            <div class="flex flex-wrap gap-x-6 gap-y-3 text-sm text-agri-cream/80">
+                <a class="transition hover:text-agri-harvest" href="{% url 'home' %}">Home</a>
+                <a class="transition hover:text-agri-harvest" href="{% url 'services' %}">Services</a>
+                <a class="transition hover:text-agri-harvest" href="{% url 'about' %}">About</a>
+                <a class="transition hover:text-agri-harvest" href="{% url 'contacts' %}">Contact</a>
+            </div>
+            <p class="text-xs text-agri-cream/70">© {% now "Y" %} Mavuno AgriHub Kenya. All rights reserved.</p>
         </div>
-    </section>
-{% endblock %}
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.lucide && typeof window.lucide.createIcons === "function") {
+                window.lucide.createIcons({ attrs: { width: 16, height: 16 } });
+            }
+        });
+    </script>
+</body>
+</html>

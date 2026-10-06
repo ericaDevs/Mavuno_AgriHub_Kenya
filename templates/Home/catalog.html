@@ -1,10 +1,230 @@
-{% extends 'home/layout.html' %}
+<!doctype html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Catalog | Mavuno Agrihub</title>
+        <link href="{% static 'style/output.css' %}" rel="stylesheet">
+    </head>
 
-{%  block title %}
-    Catalog
-{% endblock %}
+    <body>
+    <section class="">
+        <section class="mb-6 bg-agri-forest text-white p-8 h-[65vh]">
+            <div class="mx-auto max-w-7xl">
+                <div class="sticky top-0 z-20 rounded-2xl border border-agri-forest/10 bg-white/90 px-4 py-4 shadow-lg shadow-agri-forest/5 backdrop-blur sm:px-6">
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <div class="flex items-center gap-3 text-sm font-bold text-agri-forest">
+                            <span class="tracking-[0.18em] text-base uppercase text-agri-forest/70">Mavuno Agrihub</span>
+                        </div>
 
-{% block content %}
-    <h1>Our Catalog</h1>
-    <p>Welcome to our catalog page!</p>
-{% endblock %}
+                        <nav aria-label="Catalog navigation" class="flex flex-wrap items-center justify-center gap-6 text-base font-semibold text-agri-forest/80">
+                            <a class="transition hover:text-agri-leaf" href="{% url 'home' %}">Home</a>
+                            <a class="transition hover:text-agri-leaf" href="{% url 'services' %}">Services</a>
+                            <a class="transition hover:text-agri-leaf" href="{% url 'about' %}">About</a>
+                            <a class="transition hover:text-agri-leaf" href="{% url 'contacts' %}">Contacts</a>
+                        </nav>
+
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                            <label class="flex items-center gap-2 rounded-full border border-agri-forest/15 bg-agri-cream px-4 py-2.5 text-sm text-agri-forest/70 shadow-sm">
+                                <svg class="h-4 w-4 text-agri-leaf" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                                <input type="search" placeholder="Search products" class="w-full bg-transparent text-sm text-agri-forest placeholder:text-agri-forest/45 focus:outline-none sm:w-44" />
+                            </label>
+
+                            <a class="relative rounded-full p-2 text-agri-forest bg-agri-harvest">
+                                <i data-lucide="shopping-cart"></i>  
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                        <p class="text-xs font-extrabold uppercase tracking-[0.24em] text-agri-harvest">Shop the fields</p>
+                        <h1 class="text-4xl mt-3 md:text-5xl font-extrabold tracking-tight">Fresh solutions for every farm</h1>
+                        <p class="mt-3 text-white">Discover our range of organic and sustainable farming products designed to help you grow healthier crops.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+            <div class="mt-10 grid gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
+                <aside class="rounded-3xl border border-agri-forest/10 bg-white p-5 shadow-sm">
+                    <h2 class="text-lg font-extrabold text-agri-forest">Categories</h2>
+                    <ul class="mt-5 space-y-3 text-sm text-agri-forest/80">
+                        <li><a class="flex items-center justify-between rounded-xl bg-agri-cream px-3 py-2.5 font-semibold hover:bg-agri-cream/70" href="#"><span>Seeds</span><span>24</span></a></li>
+                        <li><a class="flex items-center justify-between rounded-xl px-3 py-2.5 font-semibold hover:bg-agri-cream" href="#"><span>Fertilizers</span><span>18</span></a></li>
+                        <li><a class="flex items-center justify-between rounded-xl px-3 py-2.5 font-semibold hover:bg-agri-cream" href="#"><span>Tools</span><span>32</span></a></li>
+                        <li><a class="flex items-center justify-between rounded-xl px-3 py-2.5 font-semibold hover:bg-agri-cream" href="#"><span>Irrigation</span><span>16</span></a></li>
+                        <li><a class="flex items-center justify-between rounded-xl px-3 py-2.5 font-semibold hover:bg-agri-cream" href="#"><span>Pest control</span><span>14</span></a></li>
+                        <li><a class="flex items-center justify-between rounded-xl px-3 py-2.5 font-semibold hover:bg-agri-cream" href="#"><span>Crop care</span><span>20</span></a></li>
+                    </ul>
+                </aside>
+
+                <div class="space-y-10">
+                    <section>
+                        <div class="mb-5 flex items-center justify-between gap-3">
+                            <h2 class="text-2xl font-extrabold text-agri-forest">Seeds & inputs</h2>
+                            <a href="#" class="text-sm font-bold text-agri-leaf transition hover:text-agri-forest">View all</a>
+                        </div>
+
+                        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                            <article class="overflow-hidden rounded-3xl border border-agri-forest/10 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=900&q=80" alt="Hybrid maize seeds" class="h-56 w-full object-cover">
+                                    <span class="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-extrabold text-agri-forest shadow-sm">New</span>
+                                </div>
+                                <div class="p-5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-agri-leaf">Seeds</span>
+                                        <div class="flex items-center gap-1 text-sm text-agri-harvest" aria-label="4.8 out of 5 stars">★ ★ ★ ★ ★</div>
+                                    </div>
+                                    <h3 class="mt-3 text-xl font-extrabold text-agri-forest">Hybrid Maize Seeds</h3>
+                                    <p class="mt-2 text-sm leading-6 text-agri-forest/70">High-yield seeds suited for resilient crop growth in Kenyan conditions.</p>
+                                    <div class="mt-5 flex items-center justify-between gap-3">
+                                        <div class="rounded-full bg-agri-cream px-3 py-2 text-lg font-extrabold text-agri-forest">KSh 1,250</div>
+                                        <button type="button" class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-4 py-2.5 text-sm font-extrabold text-agri-forest transition hover:bg-agri-forest hover:text-white">Add to cart</button>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="overflow-hidden rounded-3xl border border-agri-forest/10 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=900&q=80" alt="Organic fertilizer bag" class="h-56 w-full object-cover">
+                                    <span class="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-extrabold text-agri-forest shadow-sm">Best seller</span>
+                                </div>
+                                <div class="p-5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-agri-leaf">Fertilizer</span>
+                                        <div class="flex items-center gap-1 text-sm text-agri-harvest" aria-label="5 out of 5 stars">★ ★ ★ ★ ★</div>
+                                    </div>
+                                    <h3 class="mt-3 text-xl font-extrabold text-agri-forest">Organic Compost Boost</h3>
+                                    <p class="mt-2 text-sm leading-6 text-agri-forest/70">Nutrient-rich compost designed to strengthen root health and improve soil structure.</p>
+                                    <div class="mt-5 flex items-center justify-between gap-3">
+                                        <div class="rounded-full bg-agri-cream px-3 py-2 text-lg font-extrabold text-agri-forest">KSh 2,940</div>
+                                        <button type="button" class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-4 py-2.5 text-sm font-extrabold text-agri-forest transition hover:bg-agri-forest hover:text-white">Add to cart</button>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="overflow-hidden rounded-3xl border border-agri-forest/10 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1464226184884-fa52ac9fc8a6?auto=format&fit=crop&w=900&q=80" alt="Farm tools set" class="h-56 w-full object-cover">
+                                </div>
+                                <div class="p-5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-agri-leaf">Tools</span>
+                                        <div class="flex items-center gap-1 text-sm text-agri-harvest" aria-label="4.6 out of 5 stars">★ ★ ★ ★ ★</div>
+                                    </div>
+                                    <h3 class="mt-3 text-xl font-extrabold text-agri-forest">Field Maintenance Kit</h3>
+                                    <p class="mt-2 text-sm leading-6 text-agri-forest/70">Essential hand tools for weeding, trimming, and seasonal field maintenance.</p>
+                                    <div class="mt-5 flex items-center justify-between gap-3">
+                                        <div class="rounded-full bg-agri-cream px-3 py-2 text-lg font-extrabold text-agri-forest">KSh 3,680</div>
+                                        <button type="button" class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-4 py-2.5 text-sm font-extrabold text-agri-forest transition hover:bg-agri-forest hover:text-white">Add to cart</button>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="mb-5 flex items-center justify-between gap-3">
+                            <h2 class="text-2xl font-extrabold text-agri-forest">Crop protection</h2>
+                            <a href="#" class="text-sm font-bold text-agri-leaf transition hover:text-agri-forest">View all</a>
+                        </div>
+
+                        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                            <article class="overflow-hidden rounded-3xl border border-agri-forest/10 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1471193945509-9ad0617afabf?auto=format&fit=crop&w=900&q=80" alt="Irrigation dripper system" class="h-56 w-full object-cover">
+                                </div>
+                                <div class="p-5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-agri-leaf">Irrigation</span>
+                                        <div class="flex items-center gap-1 text-sm text-agri-harvest" aria-label="4.9 out of 5 stars">★ ★ ★ ★ ★</div>
+                                    </div>
+                                    <h3 class="mt-3 text-xl font-extrabold text-agri-forest">Drip Irrigation Kit</h3>
+                                    <p class="mt-2 text-sm leading-6 text-agri-forest/70">Water-saving equipment that keeps crops healthy while reducing usage.</p>
+                                    <div class="mt-5 flex items-center justify-between gap-3">
+                                        <div class="rounded-full bg-agri-cream px-3 py-2 text-lg font-extrabold text-agri-forest">KSh 6,200</div>
+                                        <button type="button" class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-4 py-2.5 text-sm font-extrabold text-agri-forest transition hover:bg-agri-forest hover:text-white">Add to cart</button>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="overflow-hidden rounded-3xl border border-agri-forest/10 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=900&q=80" alt="Plant protection product" class="h-56 w-full object-cover">
+                                </div>
+                                <div class="p-5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-agri-leaf">Protection</span>
+                                        <div class="flex items-center gap-1 text-sm text-agri-harvest" aria-label="4.7 out of 5 stars">★ ★ ★ ★ ★</div>
+                                    </div>
+                                    <h3 class="mt-3 text-xl font-extrabold text-agri-forest">Crop Shield Spray</h3>
+                                    <p class="mt-2 text-sm leading-6 text-agri-forest/70">Effective foliar treatment that safeguards crops against common pests and disease.</p>
+                                    <div class="mt-5 flex items-center justify-between gap-3">
+                                        <div class="rounded-full bg-agri-cream px-3 py-2 text-lg font-extrabold text-agri-forest">KSh 1,980</div>
+                                        <button type="button" class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-4 py-2.5 text-sm font-extrabold text-agri-forest transition hover:bg-agri-forest hover:text-white">Add to cart</button>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="overflow-hidden rounded-3xl border border-agri-forest/10 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1534422298391-6d7ebd7700ef?auto=format&fit=crop&w=900&q=80" alt="Farmer harvesting leafy greens" class="h-56 w-full object-cover">
+                                    <span class="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-extrabold text-agri-forest shadow-sm">Eco</span>
+                                </div>
+                                <div class="p-5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-agri-leaf">Crop care</span>
+                                        <div class="flex items-center gap-1 text-sm text-agri-harvest" aria-label="4.5 out of 5 stars">★ ★ ★ ★ ★</div>
+                                    </div>
+                                    <h3 class="mt-3 text-xl font-extrabold text-agri-forest">Leaf Vitality Mix</h3>
+                                    <p class="mt-2 text-sm leading-6 text-agri-forest/70">Balanced nutrient application that supports greener, stronger leafy growth.</p>
+                                    <div class="mt-5 flex items-center justify-between gap-3">
+                                        <div class="rounded-full bg-agri-cream px-3 py-2 text-lg font-extrabold text-agri-forest">KSh 2,150</div>
+                                        <button type="button" class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-4 py-2.5 text-sm font-extrabold text-agri-forest transition hover:bg-agri-forest hover:text-white">Add to cart</button>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <footer id="contact" class="bg-agri-forest text-white">
+        <div class="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-12 sm:px-10 md:flex-row md:items-end md:justify-between">
+            <div id="about">
+                <a class="text-lg font-extrabold tracking-wide" href="{% url 'home' %}#home">MAVUNO AGRIHUB</a>
+                <p class="mt-3 max-w-sm text-sm leading-6 text-agri-cream/80">
+                    Connecting farmers to the knowledge, resources, and markets that help agriculture thrive.
+                </p>
+            </div>
+            <div class="flex flex-wrap gap-x-6 gap-y-3 text-sm text-agri-cream/80">
+                <a class="transition hover:text-agri-harvest" href="{% url 'home' %}">Home</a>
+                <a class="transition hover:text-agri-harvest" href="{% url 'services' %}">Services</a>
+                <a class="transition hover:text-agri-harvest" href="{% url 'about' %}">About</a>
+                <a class="transition hover:text-agri-harvest" href="{% url 'contacts' %}">Contact</a>
+            </div>
+            <p class="text-xs text-agri-cream/70">© {% now "Y" %} Mavuno AgriHub Kenya. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        if (window.lucide && typeof window.lucide.createIcons === "function") {
+          lucide.createIcons({ attrs: { width: 16, height: 16 } });
+        } else {
+          console.warn("Lucide failed to load");
+        }
+      });
+    </script>
+    <script src="{% static 'scripts/script.js' %}"></script>
+    </body>
+</html>
