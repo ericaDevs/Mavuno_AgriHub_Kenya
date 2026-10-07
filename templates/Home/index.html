@@ -326,6 +326,8 @@
                 </div>
             </div>
         </section>
+
+        
     </main>
 
     <!-- CLEAN FOOTER -->
@@ -352,6 +354,31 @@
         document.addEventListener("DOMContentLoaded", () => {
             if (window.lucide && typeof window.lucide.createIcons === "function") {
                 window.lucide.createIcons({ attrs: { width: 16, height: 16 } });
+            }
+
+            // Testimonials Carousel Controls
+            const track = document.getElementById('reviewsTrack');
+            const prevBtn = document.getElementById('prevReviewBtn');
+            const nextBtn = document.getElementById('nextReviewBtn');
+            const progress = document.getElementById('reviewProgress');
+
+            if (track && prevBtn && nextBtn && progress) {
+                const scrollStep = 370;
+                prevBtn.addEventListener('click', () => {
+                    track.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+                });
+                nextBtn.addEventListener('click', () => {
+                    track.scrollBy({ left: scrollStep, behavior: 'smooth' });
+                });
+
+                const updateProgress = () => {
+                    const maxScroll = track.scrollWidth - track.clientWidth;
+                    if (maxScroll > 0) {
+                        const pct = Math.min(100, Math.max(20, (track.scrollLeft / maxScroll) * 100));
+                        progress.style.width = pct + '%';
+                    }
+                };
+                track.addEventListener('scroll', updateProgress, { passive: true });
             }
         });
     </script>
