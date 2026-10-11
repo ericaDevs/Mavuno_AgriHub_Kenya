@@ -1,0 +1,36 @@
+{% extends "Dashboard/layout.html" %}
+{% block title %}Inventory{% endblock %}
+{% block breadcrumb %}Inventory{% endblock %}
+{% block inventory_current %}aria-current="page"{% endblock %}
+{% block inventory_active %}bg-agri-forest text-white hover:bg-agri-forest hover:text-white{% endblock %}
+
+{% block content %}
+<section aria-labelledby="page-title">
+    <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div><p class="text-xs font-extrabold uppercase tracking-[0.18em] text-agri-leaf">Stock control</p><h1 id="page-title" class="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">Inventory</h1><p class="mt-1 text-sm text-agri-forest/55">Keep an eye on product availability and stock levels.</p></div>
+        <button type="button" class="inline-flex items-center justify-center gap-2 rounded-xl border border-agri-forest/10 bg-white px-4 py-2.5 text-sm font-extrabold text-agri-forest transition hover:bg-agri-cream"><i data-lucide="download" class="h-4 w-4"></i> Export inventory</button>
+    </div>
+    <div class="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm"><p class="text-sm font-bold text-agri-forest/55">Tracked products</p><p class="mt-2 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Products with stock records</p></article>
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm"><p class="text-sm font-bold text-agri-forest/55">In stock</p><p class="mt-2 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Available to customers</p></article>
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm"><p class="text-sm font-bold text-agri-forest/55">Low stock</p><p class="mt-2 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">At or below your reorder point</p></article>
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm"><p class="text-sm font-bold text-agri-forest/55">Out of stock</p><p class="mt-2 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Needs replenishment</p></article>
+    </div>
+    <section class="overflow-hidden rounded-2xl border border-agri-forest/10 bg-white shadow-sm">
+        <div class="flex flex-col gap-4 border-b border-agri-forest/10 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <div><h2 class="font-extrabold">Stock levels</h2><p class="mt-1 text-xs text-agri-forest/50">Review quantities and spot products that need attention</p></div>
+            <div class="flex flex-col gap-2 sm:flex-row">
+                <label class="flex h-10 items-center gap-2 rounded-xl border border-agri-forest/10 px-3 text-agri-forest/45"><i data-lucide="search" class="h-4 w-4"></i><span class="sr-only">Search inventory</span><input type="search" placeholder="Search inventory..." class="w-full bg-transparent text-sm outline-none placeholder:text-agri-forest/40 sm:w-44"></label>
+                <label class="sr-only" for="stock-filter">Filter stock level</label><select id="stock-filter" class="h-10 rounded-xl border border-agri-forest/10 bg-white px-3 text-sm font-bold text-agri-forest/65 outline-none"><option>All stock levels</option><option>In stock</option><option>Low stock</option><option>Out of stock</option></select>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[760px] text-left text-sm">
+                <thead class="bg-agri-cream/60 text-xs font-extrabold uppercase tracking-wide text-agri-forest/55"><tr><th scope="col" class="px-5 py-3">Product</th><th scope="col" class="px-5 py-3">SKU</th><th scope="col" class="px-5 py-3">Category</th><th scope="col" class="px-5 py-3">Available</th><th scope="col" class="px-5 py-3">Reorder point</th><th scope="col" class="px-5 py-3">Stock status</th></tr></thead>
+                <tbody><tr><td colspan="6" class="px-5 py-16 text-center"><span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-agri-cream text-agri-leaf"><i data-lucide="warehouse" class="h-6 w-6"></i></span><h3 class="mt-4 font-extrabold">No inventory to display</h3><p class="mx-auto mt-1 max-w-sm text-xs leading-5 text-agri-forest/50">Stock information will appear here when products have been added to your catalog.</p></td></tr></tbody>
+            </table>
+        </div>
+        <div class="flex items-center justify-between border-t border-agri-forest/10 px-5 py-3 text-xs text-agri-forest/45"><span>Showing 0 products</span><div class="flex gap-2"><button type="button" disabled class="rounded-lg border border-agri-forest/10 px-3 py-1.5 font-bold opacity-50">Previous</button><button type="button" disabled class="rounded-lg border border-agri-forest/10 px-3 py-1.5 font-bold opacity-50">Next</button></div></div>
+    </section>
+</section>
+{% endblock %}

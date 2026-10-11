@@ -1,0 +1,30 @@
+{% extends "Dashboard/layout.html" %}
+{% block title %}Sales analytics{% endblock %}
+{% block breadcrumb %}Sales analytics{% endblock %}
+{% block sales_current %}aria-current="page"{% endblock %}
+{% block sales_active %}bg-agri-forest text-white hover:bg-agri-forest hover:text-white{% endblock %}
+
+{% block content %}
+<section aria-labelledby="page-title">
+    <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div><p class="text-xs font-extrabold uppercase tracking-[0.18em] text-agri-leaf">Performance</p><h1 id="page-title" class="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">Sales analytics</h1><p class="mt-1 text-sm text-agri-forest/55">Understand revenue and order performance over time.</p></div>
+        <label class="flex w-fit items-center gap-2 rounded-xl border border-agri-forest/10 bg-white px-3 py-2.5 text-sm font-bold text-agri-forest/65"><i data-lucide="calendar-days" class="h-4 w-4 text-agri-leaf"></i><span class="sr-only">Select reporting period</span><select class="bg-transparent outline-none"><option>Last 30 days</option><option>Last 7 days</option><option>This year</option></select></label>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm"><div class="flex items-center justify-between"><p class="text-sm font-bold text-agri-forest/55">Gross sales</p><i data-lucide="banknote" class="h-5 w-5 text-agri-leaf"></i></div><p class="mt-4 text-2xl font-extrabold">KSh 0.00</p><p class="mt-1 text-xs text-agri-forest/45">For the selected period</p></article>
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm"><div class="flex items-center justify-between"><p class="text-sm font-bold text-agri-forest/55">Orders</p><i data-lucide="shopping-bag" class="h-5 w-5 text-agri-leaf"></i></div><p class="mt-4 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Orders in this period</p></article>
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm"><div class="flex items-center justify-between"><p class="text-sm font-bold text-agri-forest/55">Average order value</p><i data-lucide="receipt" class="h-5 w-5 text-agri-leaf"></i></div><p class="mt-4 text-2xl font-extrabold">KSh 0.00</p><p class="mt-1 text-xs text-agri-forest/45">Average spend per order</p></article>
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm"><div class="flex items-center justify-between"><p class="text-sm font-bold text-agri-forest/55">Items sold</p><i data-lucide="package-check" class="h-5 w-5 text-agri-leaf"></i></div><p class="mt-4 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Units sold in this period</p></article>
+    </div>
+    <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(280px,0.8fr)]">
+        <section class="rounded-2xl border border-agri-forest/10 bg-white shadow-sm">
+            <div class="border-b border-agri-forest/10 px-5 py-4"><h2 class="font-extrabold">Revenue over time</h2><p class="mt-1 text-xs text-agri-forest/50">Sales trends for the selected period</p></div>
+            <div class="flex min-h-[300px] flex-col items-center justify-center px-6 py-10 text-center"><span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-agri-cream text-agri-leaf"><i data-lucide="chart-no-axes-combined" class="h-6 w-6"></i></span><h3 class="mt-4 text-sm font-extrabold">No sales data yet</h3><p class="mt-1 max-w-sm text-xs leading-5 text-agri-forest/50">Revenue trends and sales comparisons will be available when your store has completed orders.</p></div>
+        </section>
+        <section class="rounded-2xl border border-agri-forest/10 bg-white shadow-sm">
+            <div class="border-b border-agri-forest/10 px-5 py-4"><h2 class="font-extrabold">Sales by category</h2><p class="mt-1 text-xs text-agri-forest/50">See which product categories perform</p></div>
+            <div class="flex min-h-[300px] flex-col items-center justify-center px-6 py-10 text-center"><span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-agri-cream text-agri-leaf"><i data-lucide="chart-pie" class="h-6 w-6"></i></span><h3 class="mt-4 text-sm font-extrabold">Category insights will appear here</h3><p class="mt-1 max-w-xs text-xs leading-5 text-agri-forest/50">There are no completed sales in this period to compare yet.</p></div>
+        </section>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "Dashboard/layout.html" %}
+
+{% block title %}Overview{% endblock %}
+{% block breadcrumb %}Overview{% endblock %}
+{% block overview_current %}aria-current="page"{% endblock %}
+{% block overview_active %}bg-agri-forest text-white hover:bg-agri-forest hover:text-white{% endblock %}
+
+{% block content %}
+<section aria-labelledby="page-title">
+    <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-agri-leaf">Store overview</p>
+            <h1 id="page-title" class="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">Good day, admin <span aria-hidden="true">🌱</span></h1>
+            <p class="mt-1 text-sm text-agri-forest/55">Here’s what’s happening with your store today.</p>
+        </div>
+        <div class="flex items-center gap-2 self-start rounded-xl border border-agri-forest/10 bg-white px-3 py-2 text-sm font-bold text-agri-forest/65 sm:self-auto">
+            <i data-lucide="calendar-days" class="h-4 w-4 text-agri-leaf"></i>
+            {% now "j M Y" %}
+        </div>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
+            <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Total revenue</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="wallet" class="h-5 w-5"></i></span></div>
+            <p class="mt-4 text-2xl font-extrabold">KSh 0.00</p><p class="mt-1 text-xs text-agri-forest/45">All-time store revenue</p>
+        </article>
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
+            <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Total orders</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="shopping-bag" class="h-5 w-5"></i></span></div>
+            <p class="mt-4 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Orders placed in your store</p>
+        </article>
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
+            <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Products listed</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="package" class="h-5 w-5"></i></span></div>
+            <p class="mt-4 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Active products in the catalog</p>
+        </article>
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
+            <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Low stock items</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-harvest/20 text-agri-forest"><i data-lucide="triangle-alert" class="h-5 w-5"></i></span></div>
+            <p class="mt-4 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Products that need replenishing</p>
+        </article>
+    </div>
+
+    <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.85fr)]">
+        <section class="overflow-hidden rounded-2xl border border-agri-forest/10 bg-white shadow-sm">
+            <div class="flex flex-col gap-3 border-b border-agri-forest/10 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <div><h2 class="font-extrabold">Sales overview</h2><p class="mt-1 text-xs text-agri-forest/50">A snapshot of your store’s sales activity</p></div>
+                <label class="sr-only" for="overview-period">Sales period</label>
+                <select id="overview-period" class="w-fit rounded-lg border border-agri-forest/10 bg-white px-3 py-2 text-xs font-bold text-agri-forest/70 outline-none focus:border-agri-leaf"><option>Last 7 days</option><option>Last 30 days</option><option>This year</option></select>
+            </div>
+            <div class="flex min-h-[270px] flex-col items-center justify-center px-6 py-10 text-center">
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-agri-cream text-agri-leaf"><i data-lucide="chart-no-axes-column-increasing" class="h-6 w-6"></i></span>
+                <h3 class="mt-4 text-sm font-extrabold">Your sales activity will show here</h3>
+                <p class="mt-1 max-w-sm text-xs leading-5 text-agri-forest/50">Once your store starts receiving orders, this chart will help you follow revenue over time.</p>
+            </div>
+        </section>
+        <section class="rounded-2xl border border-agri-forest/10 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b border-agri-forest/10 px-5 py-4">
+                <div><h2 class="font-extrabold">Recent orders</h2><p class="mt-1 text-xs text-agri-forest/50">Keep track of incoming purchases</p></div>
+                <a href="#main-content" class="inline-flex items-center gap-1 text-xs font-extrabold text-agri-leaf hover:text-agri-forest">View all <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></a>
+            </div>
+            <div class="flex min-h-[220px] flex-col items-center justify-center px-5 py-8 text-center"><i data-lucide="inbox" class="h-8 w-8 text-agri-forest/25"></i><p class="mt-3 text-sm font-bold">No orders yet</p><p class="mt-1 text-xs text-agri-forest/50">New orders will appear here.</p></div>
+        </section>
+    </div>
+
+    <section class="mt-6 rounded-2xl border border-agri-forest/10 bg-white shadow-sm">
+        <div class="flex flex-col gap-2 border-b border-agri-forest/10 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div><h2 class="font-extrabold">Store activity</h2><p class="mt-1 text-xs text-agri-forest/50">A quick look at the areas that keep your store moving</p></div>
+            <span class="inline-flex w-fit items-center gap-2 rounded-full bg-agri-cream px-3 py-1.5 text-xs font-bold text-agri-forest/60"><span class="h-1.5 w-1.5 rounded-full bg-agri-leaf"></span>All systems ready</span>
+        </div>
+        <div class="grid divide-y divide-agri-forest/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            <div class="flex items-center gap-3 p-5"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="package-check" class="h-5 w-5"></i></span><span><span class="block text-sm font-extrabold">Product catalog</span><span class="mt-0.5 block text-xs text-agri-forest/50">Ready to add products</span></span></div>
+            <div class="flex items-center gap-3 p-5"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="clipboard-list" class="h-5 w-5"></i></span><span><span class="block text-sm font-extrabold">Order processing</span><span class="mt-0.5 block text-xs text-agri-forest/50">No orders need attention</span></span></div>
+            <div class="flex items-center gap-3 p-5"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="warehouse" class="h-5 w-5"></i></span><span><span class="block text-sm font-extrabold">Stock levels</span><span class="mt-0.5 block text-xs text-agri-forest/50">No stock alerts</span></span></div>
+        </div>
+    </section>
+</section>
+{% endblock %}
