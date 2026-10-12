@@ -53,11 +53,11 @@
 
             <!-- Zone 3: Primary Action -->
             <div class="flex items-center gap-4">
-                <a href="{% url 'contacts' %}" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
+                <a href="{% url 'authentication:register' %}" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
                     Get Started
                 </a>
 
-                <a href="{% url 'admin_dashboard:overview' %}" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
+                <a href="{% url 'authentication:login' %}" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
                     Sign In
                 </a>
             </div>

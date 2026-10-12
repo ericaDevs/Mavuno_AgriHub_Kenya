@@ -27,5 +27,5 @@ urlpatterns = [
     path('about/', views.aboutPage, name = 'about'),
     path('contacts/', views.contactsPage, name = 'contacts'),
     path('services/', views.servicesPage, name = 'services'),
-    path('dashboard/', include('Admin.urls'))
+    path('dashboard/', include('Accounts.urls'))
 ]
