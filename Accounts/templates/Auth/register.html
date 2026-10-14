@@ -1,5 +1,6 @@
 <!doctype html>
 {% load static %}
+{% load widget_tweaks %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,12 +20,12 @@
         <div class="toast-message flex items-center justify-between p-4 rounded-lg shadow-lg text-white transition-opacity duration-300
             {% if message.tags == 'error' %} 
                 bg-red-600
-                {% elif message.tags == 'warning' %} 
-                    bg-yellow-500
-                {% elif message.tags == 'info' %} 
-                    bg-blue-600
-                {% else %} 
-                bg-green-600 
+            {% elif message.tags == 'warning' %} 
+                bg-yellow-500 text-black
+            {% elif message.tags == 'info' %} 
+                bg-blue-600
+            {% else %} 
+                bg-green-600 text-black
             {% endif %}">
             
             <div class="flex items-center gap-2">
@@ -76,56 +77,45 @@
 
                     <form method="POST" action="{% url 'authentication:register' %}" class="mt-7 space-y-4">
                         {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="text-sm text-red-700" role="alert">
+                                {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
                         <div>
                             <label for="username" class="mb-2 block text-sm font-bold">Username</label>
-                            <input
-                                id="username"
-                                name="username"
-                                type="text"
-                                autocomplete="username"
-                                required
-                                placeholder="Choose a username"
-                                class="w-full rounded-xl border border-agri-forest/15 bg-agri-cream/40 px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-4 focus:ring-agri-leaf/15"
-                            >
+                            {% render_field form.username name="username" required="required" placeholder="Choose a username" class="w-full rounded-xl border border-agri-forest/15 bg-agri-cream/40 px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-4 focus:ring-agri-leaf/15" %}
+
+                            {% if form.username.errors %}
+                                <p class="text-sm text-red-700" role="alert">{{ form.username.errors.0 }}</p>
+                            {% endif %}
                         </div>
 
                         <div>
                             <label for="email" class="mb-2 block text-sm font-bold">Email</label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                autocomplete="email"
-                                required
-                                placeholder="you@example.com"
-                                class="w-full rounded-xl border border-agri-forest/15 bg-agri-cream/40 px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-4 focus:ring-agri-leaf/15"
-                            >
+                            {% render_field form.email name="email" required="required" placeholder="Email Address" class="w-full rounded-xl border border-agri-forest/15 bg-agri-cream/40 px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-4 focus:ring-agri-leaf/15" %}
+
+                            {% if form.email.errors %}
+                                <p class="text-sm text-red-700" role="alert">{{ form.email.errors.0 }}</p>
+                            {% endif %}
                         </div>
 
                         <div>
-                            <label for="password" class="mb-2 block text-sm font-bold">Password</label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                autocomplete="new-password"
-                                required
-                                placeholder="Create a password"
-                                class="w-full rounded-xl border border-agri-forest/15 bg-agri-cream/40 px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-4 focus:ring-agri-leaf/15"
-                            >
+                            <label for="id_password" class="mb-2 block text-sm font-bold">Password</label>
+                            {% render_field form.password name="password" required="required" placeholder="Enter Password" class="w-full rounded-xl border border-agri-forest/15 bg-agri-cream/40 px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-4 focus:ring-agri-leaf/15" %}
+
+                            {% if form.password.errors %}
+                                <p class="text-sm text-red-700" role="alert">{{ form.password.errors.0 }}</p>
+                            {% endif %}
                         </div>
 
                         <div>
-                            <label for="confirm-password" class="mb-2 block text-sm font-bold">Confirm password</label>
-                            <input
-                                id="confirm-password"
-                                name="confirm_password"
-                                type="password"
-                                autocomplete="new-password"
-                                required
-                                placeholder="Enter your password again"
-                                class="w-full rounded-xl border border-agri-forest/15 bg-agri-cream/40 px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-4 focus:ring-agri-leaf/15"
-                            >
+                            <label for="id_password_2" class="mb-2 block text-sm font-bold">Confirm Password</label>
+                            {% render_field form.password_2 name="password_2" required="required" placeholder="Confirm the password" class="w-full rounded-xl border border-agri-forest/15 bg-agri-cream/40 px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-4 focus:ring-agri-leaf/15" %}
+
+                            {% if form.password_2.errors %}
+                                <p class="text-sm text-red-700" role="alert">{{ form.password_2.errors.0 }}</p>
+                            {% endif %}
                         </div>
 
                         <button type="submit" class="inline-flex cursor-pointer w-full items-center justify-center rounded-xl bg-agri-forest px-5 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-agri-forest/15 transition hover:bg-agri-leaf focus:outline-none focus:ring-4 focus:ring-agri-leaf/25">
