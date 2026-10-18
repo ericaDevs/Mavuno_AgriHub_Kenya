@@ -1,16 +1,13 @@
 from django.shortcuts import render, redirect
 
 def home(request):
-    return render(request, 'home/index.html')
-
-def catalogPage(request):
-    return render(request, 'home/catalog.html')
+    return render(request, 'index.html')
 
 def aboutPage(request):
-    return render(request, 'support/about.html')
+    return render(request, 'about.html')
 
 def contactsPage(request):
-    return render(request, 'support/contacts.html')
+    return render(request, 'contacts.html')
 
 def servicesPage(request):
-    return render(request, 'home/services.html')
+    return render(request, 'services.html')
