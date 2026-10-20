@@ -1,0 +1,50 @@
+{% extends "Cartegories/layout.html" %}
+
+{% block catalog_content %}
+    <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-agri-leaf">Carefully selected for your farm</p>
+            <h2 class="mt-2 text-2xl font-extrabold tracking-tight text-agri-forest">
+                {% if selected_category_label %}{{ selected_category_label }}{% else %}Available products{% endif %}
+            </h2>
+            <p class="mt-1 text-sm text-agri-forest/55">{{ total_products }} product{{ total_products|pluralize }} to explore</p>
+        </div>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {% for product in products %}
+        <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-agri-forest/10 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-agri-leaf/30 hover:shadow-lg">
+            {% with product_image=product.images.first %}
+                {% if product_image %}
+                    <img src="{{ product_image.image.url }}" alt="{{ product_image.alt_text|default:product.name }}" class="h-40 w-full bg-agri-cream object-cover transition duration-500 group-hover:scale-[1.03]">
+                {% else %}
+                    <div class="flex h-40 items-center justify-center bg-agri-cream text-sm font-semibold text-agri-forest/45">Image unavailable</div>
+                {% endif %}
+            {% endwith %}
+            <div class="flex flex-1 flex-col p-4">
+                <div class="flex items-center justify-between gap-2">
+                    <p class="text-[10px] font-extrabold uppercase tracking-[0.12em] text-agri-leaf">{{ product.get_product_category_display }}</p>
+                    {% if product.stock_quantity %}
+                        <span class="rounded-full bg-agri-leaf/10 px-2 py-1 text-[10px] font-bold text-agri-leaf">In stock</span>
+                    {% else %}
+                        <span class="rounded-full bg-agri-cream px-2 py-1 text-[10px] font-bold text-agri-forest/55">Out of stock</span>
+                    {% endif %}
+                </div>
+                <h3 class="mt-2 line-clamp-2 min-h-10 text-sm font-extrabold leading-5 text-agri-forest">{{ product.name }}</h3>
+                <p class="mt-2 line-clamp-2 text-xs leading-5 text-agri-forest/65">{{ product.description }}</p>
+                <div class="mt-auto flex items-center justify-between gap-3 border-t border-agri-forest/10 pt-4">
+                    <span class="text-sm font-extrabold text-agri-forest">KSh {{ product.price_per_unit|floatformat:2 }}</span>
+                    <a href="{% url 'products:products' %}?category={{ product.product_category|urlencode }}" class="inline-flex items-center gap-1 text-xs font-extrabold text-agri-leaf transition hover:text-agri-forest">
+                        Browse category <i data-lucide="arrow-right" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <div class="rounded-2xl border border-agri-forest/10 bg-white px-6 py-16 text-center sm:col-span-2 xl:col-span-3">
+            <h3 class="font-extrabold text-agri-forest">{% if search or selected_category %}No matching products{% else %}No products available yet{% endif %}</h3>
+            <p class="mt-2 text-sm text-agri-forest/55">{% if search or selected_category %}Try another search or category.{% else %}Please check back soon for products in our catalog.{% endif %}</p>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

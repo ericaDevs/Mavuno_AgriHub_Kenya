@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from Products.models import Product
 
 def home(request):
-    return render(request, 'index.html')
+    products = Product.objects.all()[:10]
+    return render(request, 'index.html', {'products' : products})
 
 def aboutPage(request):
     return render(request, 'about.html')

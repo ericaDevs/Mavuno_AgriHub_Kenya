@@ -38,6 +38,79 @@ class ProductManagementTests(TestCase):
         data.update(overrides)
         return data
 
+    def test_catalog_renders_active_database_products_with_the_shared_layout(self):
+        product = Product.objects.create(
+            name="Hybrid maize seed",
+            description="A reliable high-yield seed.",
+            product_category=Product.Category.SEEDS,
+            price_per_unit="1250.00",
+            stock_quantity=25,
+        )
+        product_image = product.images.create(image=self.image_upload())
+        Product.objects.create(
+            name="Hidden product",
+            description="Not shown in the public catalog.",
+            product_category=Product.Category.SEEDS,
+            price_per_unit="10.00",
+            is_active=False,
+        )
+
+        response = self.client.get(reverse("products:products"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Hybrid maize seed")
+        self.assertContains(response, "A reliable high-yield seed.")
+        self.assertContains(response, "KSh 1250.00")
+        self.assertContains(response, product_image.image.url)
+        self.assertContains(response, "Categories")
+        self.assertContains(response, "Browse category")
+        self.assertContains(response, "xl:grid-cols-3")
+        self.assertContains(response, "Connecting farmers to the knowledge")
+        self.assertNotContains(response, "Hidden product")
+
+    def test_catalog_search_and_category_filters(self):
+        Product.objects.create(
+            name="Hybrid maize seed",
+            description="A reliable high-yield seed.",
+            product_category=Product.Category.SEEDS,
+            price_per_unit="1250.00",
+        )
+        Product.objects.create(
+            name="Organic fertilizer",
+            description="Nutrient-rich soil treatment.",
+            product_category=Product.Category.FERTILIZERS,
+            price_per_unit="800.00",
+        )
+
+        response = self.client.get(
+            reverse("products:products"),
+            {"q": "maize", "category": Product.Category.SEEDS},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Hybrid maize seed")
+        self.assertNotContains(response, "Organic fertilizer")
+
+    def test_homepage_renders_product_cards_with_actions(self):
+        Product.objects.create(
+            name="Hybrid maize seed",
+            description="A reliable high-yield seed.",
+            product_category=Product.Category.SEEDS,
+            price_per_unit="1250.00",
+            stock_quantity=25,
+        )
+
+        response = self.client.get(reverse("home"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Hybrid maize seed")
+        self.assertContains(response, "Add to cart")
+        self.assertContains(response, "View Product")
+        self.assertContains(response, "Why Choose Mavuno AgriHub?")
+        self.assertContains(response, "Trusted farm inputs")
+        self.assertContains(response, "Farm care made simple")
+        self.assertContains(response, "Sustainable growing")
+
     def test_product_list_requires_admin_session(self):
         self.client.session.flush()
         response = self.client.get(reverse("admin:products"))
@@ -68,6 +141,8 @@ class ProductManagementTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Hybrid maize seed")
+        self.assertContains(response, "min-w-[760px]")
+        self.assertContains(response, "<table")
         self.assertContains(response, "product-edit-dialog-")
         self.assertTrue(product_image.image.storage.exists(product_image.image.name))
 

@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.db import transaction
+from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from Admin.views import admin_required
@@ -8,10 +9,43 @@ from .forms import ProductForm
 from .models import Product
 
 
+# CATALOG PAGE VIEW
 def catalog(request):
-    return render(request, "catalog.html")
+    search = request.GET.get("q", "").strip()
+    category = request.GET.get("category", "").strip()
+    products = Product.objects.filter(is_active=True).prefetch_related("images")
+    if search:
+        products = products.filter(Q(name__icontains=search) | Q(description__icontains=search))
+    if category:
+        products = products.filter(product_category=category)
+
+    category_counts = dict(
+        Product.objects.filter(is_active=True)
+        .values_list("product_category")
+        .annotate(count=Count("pk"))
+    )
+    categories = [
+        {
+            "value": value,
+            "label": label,
+            "count": category_counts.get(value, 0),
+        }
+        for value, label in Product.Category.choices
+    ]
+    context = {
+        "products": products,
+        "categories": categories,
+        "search": search,
+        "selected_category": category,
+        "selected_category_label": dict(Product.Category.choices).get(category, ""),
+        "total_products": products.count(),
+        "total_catalog_products": Product.objects.filter(is_active=True).count(),
+    }
+    return render(request, "Cartegories/catalog.html", context)
 
 
+
+# DASHBOARD PROJECTS PAGE
 def _products_page(request, create_form=None, editing_product=None, edit_form=None):
     products = Product.objects.prefetch_related("images")
     search = request.GET.get("q", "").strip()

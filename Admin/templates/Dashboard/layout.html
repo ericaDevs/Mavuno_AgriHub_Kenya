@@ -58,16 +58,21 @@
                 </nav>
 
                 <div class="border-t border-agri-forest/10 p-4">
-                    <a href="{% url 'admin:overview' %}" class="flex items-center gap-3 rounded-xl p-2 transition hover:bg-agri-cream">
-                        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-agri-harvest/30 text-sm font-extrabold text-agri-forest">AD</span>
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-agri-harvest/30 text-sm font-extrabold text-agri-forest">SD</span>
                         <span class="min-w-0 flex-1">
                             <span class="block truncate text-sm font-extrabold">Store administrator</span>
-                            <span class="block truncate text-xs text-agri-forest/55">Mavuno Agrihub</span>
+                            <span class="block truncate text-xs text-agri-forest/55">Mavuno AgriHub</span>
                         </span>
-                        <i data-lucide="ellipsis" class="h-5 w-5 text-agri-forest/50"></i>
-                    </a>
+                        <span>
+                            <a href="{% url 'admin:logout' %}">
+                                <i data-lucide="log-out" class="h-5 w-5 text-agri-forest/50"></i></i>
+                            </a>
+                        </span>
+                    </div>
                 </div>
             </aside>
+
 
             <div class="min-w-0 flex-1">
                 <header class="sticky top-0 z-20 border-b border-agri-forest/10 bg-white/95 backdrop-blur">
