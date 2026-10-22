@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from Products.models import Product
 
 def home(request):
-    products = Product.objects.all()[:10]
+    products = Product.objects.filter(is_active=True).prefetch_related("images")[:10]
     return render(request, 'index.html', {'products' : products})
 
 def aboutPage(request):

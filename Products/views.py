@@ -1,11 +1,16 @@
+from decimal import Decimal
+
 from django.contrib import messages
-from django.db import transaction
+from django.contrib.messages import get_messages
 from django.db.models import Count, Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.template.loader import render_to_string
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.views.decorators.http import require_POST
 
-from Admin.views import admin_required
-
-from .forms import ProductForm
+from .cart_utils import get_session_cart
 from .models import Product
 
 
@@ -44,89 +49,182 @@ def catalog(request):
     return render(request, "Cartegories/catalog.html", context)
 
 
+def product_detail(request, pk):
+    product = get_object_or_404(
+        Product.objects.filter(is_active=True).prefetch_related("images"),
+        pk=pk,
+    )
+    return render(request, "Processes/productDetail.html", {"product": product})
 
-# DASHBOARD PROJECTS PAGE
-def _products_page(request, create_form=None, editing_product=None, edit_form=None):
-    products = Product.objects.prefetch_related("images")
-    search = request.GET.get("q", "").strip()
-    category = request.GET.get("category", "")
-    if search:
-        products = products.filter(name__icontains=search)
-    if category:
-        products = products.filter(product_category=category)
 
-    for product in products:
-        product.management_form = (
-            edit_form
-            if editing_product and product.pk == editing_product.pk
-            else ProductForm(instance=product)
+def _cart_context(request):
+    cart = get_session_cart(request)
+    products = Product.objects.filter(
+        pk__in=cart.keys(),
+        is_active=True,
+    ).prefetch_related("images")
+    products_by_id = {str(product.pk): product for product in products}
+
+    items = []
+    subtotal = Decimal("0.00")
+    item_count = 0
+    updated_cart = {}
+    cart_changed = False
+
+    for product_id, quantity in cart.items():
+        product = products_by_id.get(product_id)
+        if product is None or product.stock_quantity == 0:
+            cart_changed = True
+            continue
+
+        if quantity > product.stock_quantity:
+            quantity = product.stock_quantity
+            cart_changed = True
+            messages.info(
+                request,
+                f'Quantity for "{product.name}" was adjusted to current available stock.',
+            )
+
+        line_total = product.price_per_unit * quantity
+        subtotal += line_total
+        item_count += quantity
+        updated_cart[product_id] = quantity
+        items.append(
+            {
+                "product": product,
+                "quantity": quantity,
+                "line_total": line_total,
+                "image": product.images.first(),
+            }
         )
 
-    context = {
-        "products": products,
-        "categories": Product.Category.choices,
-        "selected_category": category,
-        "search": search,
-        "total_products": Product.objects.count(),
-        "active_products": Product.objects.filter(is_active=True).count(),
-        "out_of_stock_products": Product.objects.filter(stock_quantity=0).count(),
-        "create_form": create_form or ProductForm(),
-        "editing_product": editing_product,
-    }
-    return render(request, "Dashboard/products.html", context)
+    if cart_changed or cart != updated_cart:
+        request.session["cart"] = updated_cart
+
+    return {"items": items, "subtotal": subtotal, "item_count": item_count}
 
 
-@admin_required
-def product_management(request):
-    return _products_page(request)
+def _is_cart_ajax(request):
+    return request.headers.get("x-requested-with") == "XMLHttpRequest"
 
 
-@admin_required
-def product_create(request):
-    if request.method != "POST":
-        return redirect("admin:products")
-
-    form = ProductForm(request.POST, request.FILES)
-    if form.is_valid():
-        with transaction.atomic():
-            product = form.save()
-            for image in form.cleaned_data["images"]:
-                product.images.create(image=image)
-        messages.success(request, f'"{product.name}" was added to the catalog.')
-        return redirect("admin:products")
-    return _products_page(request, create_form=form)
-
-
-@admin_required
-def product_update(request, product_id):
-    product = get_object_or_404(Product.objects.prefetch_related("images"), pk=product_id)
-    if request.method != "POST":
-        return redirect("admin:products")
-
-    form = ProductForm(request.POST, request.FILES, instance=product)
-    if form.is_valid():
-        with transaction.atomic():
-            product = form.save()
-            removed_images = list(form.cleaned_data["remove_images"])
-            for product_image in removed_images:
-                product_image.image.delete(save=False)
-                product_image.delete()
-            for image in form.cleaned_data["images"]:
-                product.images.create(image=image)
-        messages.success(request, f'"{product.name}" was updated.')
-        return redirect("admin:products")
-    return _products_page(request, editing_product=product, edit_form=form)
+def _cart_ajax_response(request):
+    context = _cart_context(request)
+    messages_for_response = [
+        {"text": str(message), "tags": message.tags}
+        for message in get_messages(request)
+    ]
+    cart_html = render_to_string(
+        "Processes/partials/cartContent.html",
+        context,
+        request=request,
+    )
+    return JsonResponse(
+        {
+            "cart_html": cart_html,
+            "item_count": context["item_count"],
+            "messages": messages_for_response,
+        }
+    )
 
 
-@admin_required
-def product_delete(request, product_id):
-    if request.method != "POST":
-        return redirect("admin:products")
+def cart_page(request):
+    return render(request, "Processes/cartPage.html", _cart_context(request))
 
-    product = get_object_or_404(Product.objects.prefetch_related("images"), pk=product_id)
-    name = product.name
-    for product_image in product.images.all():
-        product_image.image.delete(save=False)
-    product.delete()
-    messages.success(request, f'"{name}" was removed from the catalog.')
-    return redirect("admin:products")
+
+@require_POST
+def cart_add(request, pk):
+    product = get_object_or_404(Product, pk=pk, is_active=True)
+    detail_url = reverse("products:detail", args=[product.pk])
+    next_url = request.POST.get("next", "")
+    if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+        next_url = ""
+
+    if product.stock_quantity == 0:
+        messages.error(request, f'"{product.name}" is currently out of stock.')
+        if _is_cart_ajax(request):
+            return _cart_ajax_response(request)
+        return redirect(next_url or detail_url)
+
+    try:
+        quantity = int(request.POST.get("quantity", "1"))
+    except (TypeError, ValueError):
+        messages.error(request, "Enter a valid quantity.")
+        if _is_cart_ajax(request):
+            return _cart_ajax_response(request)
+        return redirect(next_url or detail_url)
+
+    if quantity < 1:
+        messages.error(request, "Quantity must be at least one.")
+        if _is_cart_ajax(request):
+            return _cart_ajax_response(request)
+        return redirect(next_url or detail_url)
+
+    cart = get_session_cart(request)
+    product_key = str(product.pk)
+    requested_quantity = cart.get(product_key, 0) + quantity
+    cart[product_key] = min(requested_quantity, product.stock_quantity)
+    request.session["cart"] = cart
+
+    if requested_quantity > product.stock_quantity:
+        messages.info(
+            request,
+            f'Only {product.stock_quantity} of "{product.name}" are currently available.',
+        )
+    else:
+        messages.success(request, f'"{product.name}" was added to your cart.')
+    if _is_cart_ajax(request):
+        return _cart_ajax_response(request)
+    return redirect(next_url or "products:cart")
+
+
+@require_POST
+def cart_update(request, pk):
+    product = get_object_or_404(Product, pk=pk, is_active=True)
+    cart = get_session_cart(request)
+    product_key = str(product.pk)
+
+    if product_key not in cart:
+        messages.error(request, "That product is no longer in your cart.")
+        if _is_cart_ajax(request):
+            return _cart_ajax_response(request)
+        return redirect("products:cart")
+
+    try:
+        adjustment = int(request.POST.get("adjustment", ""))
+    except (TypeError, ValueError):
+        messages.error(request, "That quantity adjustment is invalid.")
+        if _is_cart_ajax(request):
+            return _cart_ajax_response(request)
+        return redirect("products:cart")
+
+    if adjustment not in (-1, 1):
+        messages.error(request, "That quantity adjustment is invalid.")
+    elif product.stock_quantity == 0:
+        cart.pop(product_key)
+        request.session["cart"] = cart
+        messages.error(request, f'"{product.name}" is now out of stock and was removed.')
+    elif adjustment == 1 and cart[product_key] >= product.stock_quantity:
+        messages.info(request, f'Only {product.stock_quantity} of "{product.name}" are available.')
+    else:
+        quantity = cart[product_key] + adjustment
+        if quantity == 0:
+            cart.pop(product_key)
+        else:
+            cart[product_key] = quantity
+        request.session["cart"] = cart
+        messages.success(request, "Your cart was updated.")
+    if _is_cart_ajax(request):
+        return _cart_ajax_response(request)
+    return redirect("products:cart")
+
+
+@require_POST
+def cart_remove(request, pk):
+    cart = get_session_cart(request)
+    cart.pop(str(pk), None)
+    request.session["cart"] = cart
+    messages.success(request, "The item was removed from your cart.")
+    if _is_cart_ajax(request):
+        return _cart_ajax_response(request)
+    return redirect("products:cart")

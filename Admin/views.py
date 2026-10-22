@@ -2,10 +2,23 @@ from functools import wraps
 
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
-from django.shortcuts import render, redirect
+from django.db import transaction
+from django.shortcuts import get_object_or_404, render, redirect
 
 from .forms import CustomUserCreationForm, LoginForm
 from .models import Admins
+from Products.forms import ProductForm
+from Products.models import Product
+
+
+def admin_required(view_func):
+    @wraps(view_func)
+    def wrapped_view(request, *args, **kwargs):
+        if not request.session.get("admin_id"):
+            return redirect("admin:login")
+        return view_func(request, *args, **kwargs)
+
+    return wrapped_view
 
 
 def register(request):
@@ -60,24 +73,101 @@ def logout(request):
     return redirect("admin:login")
 
 
-def admin_required(view_func):
-    @wraps(view_func)
-    def wrapped_view(request, *args, **kwargs):
-        if not request.session.get("admin_id"):
-            return redirect("admin:login")
-        return view_func(request, *args, **kwargs)
+# Product dashboard
+def _products_page(request, create_form=None, editing_product=None, edit_form=None):
+    products = Product.objects.prefetch_related("images")
+    search = request.GET.get("q", "").strip()
+    category = request.GET.get("category", "")
+    if search:
+        products = products.filter(name__icontains=search)
+    if category:
+        products = products.filter(product_category=category)
 
-    return wrapped_view
+    for product in products:
+        product.management_form = (
+            edit_form
+            if editing_product and product.pk == editing_product.pk
+            else ProductForm(instance=product)
+        )
+
+    context = {
+        "products": products,
+        "categories": Product.Category.choices,
+        "selected_category": category,
+        "search": search,
+        "total_products": Product.objects.count(),
+        "active_products": Product.objects.filter(is_active=True).count(),
+        "out_of_stock_products": Product.objects.filter(stock_quantity=0).count(),
+        "create_form": create_form or ProductForm(),
+        "editing_product": editing_product,
+    }
+    return render(request, "Dashboard/products.html", context)
+
+
+@admin_required
+def product_management(request):
+    return _products_page(request)
+
+
+@admin_required
+def product_create(request):
+    if request.method != "POST":
+        return redirect("admin:products")
+
+    form = ProductForm(request.POST, request.FILES)
+    if form.is_valid():
+        with transaction.atomic():
+            product = form.save()
+            for image in form.cleaned_data["images"]:
+                product.images.create(image=image)
+        messages.success(request, f'"{product.name}" was added to the catalog.')
+        return redirect("admin:products")
+    return _products_page(request, create_form=form)
+
+
+@admin_required
+def product_update(request, product_id):
+    product = get_object_or_404(Product.objects.prefetch_related("images"), pk=product_id)
+    if request.method != "POST":
+        return redirect("admin:products")
+
+    form = ProductForm(request.POST, request.FILES, instance=product)
+    if form.is_valid():
+        with transaction.atomic():
+            product = form.save()
+            removed_images = list(form.cleaned_data["remove_images"])
+            for product_image in removed_images:
+                product_image.image.delete(save=False)
+                product_image.delete()
+            for image in form.cleaned_data["images"]:
+                product.images.create(image=image)
+        messages.success(request, f'"{product.name}" was updated.')
+        return redirect("admin:products")
+    return _products_page(request, editing_product=product, edit_form=form)
+
+
+@admin_required
+def product_delete(request, product_id):
+    if request.method != "POST":
+        return redirect("admin:products")
+
+    product = get_object_or_404(Product.objects.prefetch_related("images"), pk=product_id)
+    name = product.name
+    for product_image in product.images.all():
+        product_image.image.delete(save=False)
+    product.delete()
+    messages.success(request, f'"{name}" was removed from the catalog.')
+    return redirect("admin:products")
+
+
+
+
+
 
 
 @admin_required
 def overview(request):
     return render(request, "Dashboard/overview.html")
-
-
-@admin_required
-def products(request):
-    return render(request, "Dashboard/products.html")
 
 
 @admin_required

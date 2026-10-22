@@ -16,9 +16,11 @@
         <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-agri-forest/10 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-agri-leaf/30 hover:shadow-lg">
             {% with product_image=product.images.first %}
                 {% if product_image %}
-                    <img src="{{ product_image.image.url }}" alt="{{ product_image.alt_text|default:product.name }}" class="h-40 w-full bg-agri-cream object-cover transition duration-500 group-hover:scale-[1.03]">
+                    <a href="{% url 'products:detail' product.pk %}" aria-label="View {{ product.name }} details">
+                        <img src="{{ product_image.image.url }}" alt="{{ product_image.alt_text|default:product.name }}" class="h-40 w-full bg-agri-cream object-cover transition duration-500 group-hover:scale-[1.03]">
+                    </a>
                 {% else %}
-                    <div class="flex h-40 items-center justify-center bg-agri-cream text-sm font-semibold text-agri-forest/45">Image unavailable</div>
+                    <a href="{% url 'products:detail' product.pk %}" class="flex h-40 items-center justify-center bg-agri-cream text-sm font-semibold text-agri-forest/45">Image unavailable</a>
                 {% endif %}
             {% endwith %}
             <div class="flex flex-1 flex-col p-4">
@@ -30,13 +32,23 @@
                         <span class="rounded-full bg-agri-cream px-2 py-1 text-[10px] font-bold text-agri-forest/55">Out of stock</span>
                     {% endif %}
                 </div>
-                <h3 class="mt-2 line-clamp-2 min-h-10 text-sm font-extrabold leading-5 text-agri-forest">{{ product.name }}</h3>
+                <h3 class="mt-2 line-clamp-2 mb-2 text-sm font-extrabold leading-5 text-agri-forest">
+                    <a href="{% url 'products:detail' product.pk %}" class="hover:text-agri-leaf">{{ product.name }}</a>
+                </h3>
+
+                <span class="text-sm font-extrabold text-agri-forest">KSh {{ product.price_per_unit|floatformat:2 }}</span>
                 <p class="mt-2 line-clamp-2 text-xs leading-5 text-agri-forest/65">{{ product.description }}</p>
                 <div class="mt-auto flex items-center justify-between gap-3 border-t border-agri-forest/10 pt-4">
-                    <span class="text-sm font-extrabold text-agri-forest">KSh {{ product.price_per_unit|floatformat:2 }}</span>
-                    <a href="{% url 'products:products' %}?category={{ product.product_category|urlencode }}" class="inline-flex items-center gap-1 text-xs font-extrabold text-agri-leaf transition hover:text-agri-forest">
-                        Browse category <i data-lucide="arrow-right" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                    <a href="{% url 'products:detail' product.pk %}" class="inline-flex min-h-9 items-center justify-center gap-1 rounded-lg bg-agri-cream border border-agri-leaf px-2 text-[11px] font-extrabold transition hover:bg-agri-leaf hover:text-white">
+                        View Details <i data-lucide="arrow-right" class="h-3.5 w-3.5" aria-hidden="true"></i>
                     </a>
+                    <form method="post" action="{% url 'products:cart_add' product.pk %}" data-cart-operation>
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" {% if not product.stock_quantity %}disabled{% endif %} class="inline-flex min-h-9 items-center justify-center gap-1 rounded-lg bg-agri-harvest px-2 text-[11px] font-extrabold transition hover:bg-agri-forest hover:text-white disabled:cursor-not-allowed disabled:opacity-50">
+                            Add to cart <i data-lucide="shopping-cart" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </article>

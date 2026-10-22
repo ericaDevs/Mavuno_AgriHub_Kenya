@@ -60,6 +60,15 @@
                 <a href="{% url 'authentication:login' %}" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
                     Sign In
                 </a>
+
+                <a data-cart-link data-count="{{ cart_item_count }}" href="{% url 'products:cart' %}" aria-label="Shopping cart, {{ cart_item_count }} {% if cart_item_count == 1 %}item{% else %}items{% endif %}" class="relative rounded-full px-5 py-2.5 cursor-pointer bg-agri-forest text-white flex items-center justify-center gap-2">
+                    <i data-lucide="shopping-cart">
+                    </i>
+                    Cart
+                    {% if cart_item_count %}
+                        <span data-cart-badge role="status" aria-live="polite" class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-red-600 px-1 text-[10px] font-extrabold leading-none text-white">{{ cart_item_count }}</span>
+                    {% endif %}
+                </a>
             </div>
         </div>
     </header>
@@ -149,7 +158,7 @@
             <div class="mx-auto grid max-w-7xl items-center gap-8 md:grid-cols-2 lg:grid-cols-12 lg:gap-10">
                 <div class="relative overflow-hidden rounded-3xl shadow-lg md:col-span-1 lg:col-span-5">
                     <img src="{% static 'images/growing together.jpg' %}" alt="growing together" class="h-72 w-full object-cover sm:h-96 lg:h-100"/>
-                    <div class="absolute inset-0 bg-gradient-to-t from-agri-forest/65 via-transparent to-transparent"></div>
+                    <div class="absolute inset-0 bg-linear-to-t from-agri-forest/65 via-transparent to-transparent"></div>
                     <div class="absolute bottom-5 left-5 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-extrabold text-agri-forest shadow-md">
                         <i data-lucide="sprout" class="h-4 w-4 text-agri-leaf" aria-hidden="true"></i>
                         Growing together
@@ -249,13 +258,17 @@
                             </div>
 
                             <div class="mt-4 grid grid-cols-2 gap-2 border-t border-agri-forest/10 pt-3">
-                                <a href="" class="inline-flex min-h-9 items-center justify-center rounded-lg border border-agri-forest/15 px-2 text-[11px] font-extrabold text-agri-forest transition hover:border-agri-forest hover:bg-agri-cream">
+                                <a href="{% url 'products:detail' product.pk %}" class="inline-flex min-h-9 items-center justify-center rounded-lg border border-agri-forest/15 px-2 text-[11px] font-extrabold text-agri-forest transition hover:border-agri-forest hover:bg-agri-cream">
                                     View Product
                                 </a>
-                                <a href="" class="inline-flex min-h-9 items-center justify-center gap-1 rounded-lg bg-agri-forest px-2 text-[11px] font-extrabold text-white transition hover:bg-agri-leaf">
-                                    {% comment %} <i data-lucide="shopping-cart" class="h-3.5 w-3.5" aria-hidden="true"></i> {% endcomment %}
-                                    Add to cart
-                                </a>
+                                <form method="post" action="{% url 'products:cart_add' product.pk %}" data-cart-operation>
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" {% if not product.stock_quantity %}disabled{% endif %} class="inline-flex min-h-9 w-full items-center justify-center gap-1 rounded-lg bg-agri-forest px-2 text-[11px] font-extrabold text-white transition hover:bg-agri-leaf disabled:cursor-not-allowed disabled:opacity-50">
+                                        <i data-lucide="shopping-cart" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                                        Add to cart
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </article>
@@ -270,8 +283,8 @@
 
 
 
-                <div class="mt-6">
-                    <a href="{% url 'products:products' %}" class="inline-flex items-center justify-center rounded-full bg-agri-forest px-7 py-3 text-sm font-bold text-white shadow-sm hover:bg-agri-leaf transition-all duration-200">
+                <div class="mt-6 w-full flex items-center justify-end">
+                    <a href="{% url 'products:products' %}" class="inline-flex items-center justify-center rounded-full bg-agri-harvest px-7 py-3 text-base font-bold text-agri-forest shadow-sm hover:bg-agri-leaf hover:text-agri-cream transition-all duration-200">
                         View Product Catalog
                     </a>
                 </div>
@@ -355,7 +368,7 @@
         <!-- ================== WHY CHOOSE MAVUNO ==================== -->
         <section class="bg-[#fbfaf6] px-6 py-14 sm:px-8 sm:py-18 lg:px-12">
             <div class="mx-auto max-w-7xl">
-                <h2 class="text-center text-2xl font-extrabold tracking-tight text-agri-forest sm:text-3xl">Why Choose Mavuno AgriHub?</h2>
+                <h2 class="sm:text-3xl text-center md:text-4xl font-extrabold tracking-tight text-agri-forest ">Why Choose Mavuno AgriHub?</h2>
 
                 <div class="mt-10 grid items-center gap-8 md:grid-cols-2 lg:grid-cols-[1fr_minmax(220px,0.9fr)_1fr] lg:gap-6">
                     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
@@ -365,7 +378,7 @@
                             </span>
                             <div>
                                 <h3 class="font-extrabold text-agri-forest">Trusted farm inputs</h3>
-                                <p class="mt-1 text-sm leading-6 text-agri-forest/65">Quality seeds, tools, and essentials selected for productive farms.</p>
+                                <p class="mt-1 text-base leading-6 text-agri-forest/65">Quality seeds, tools, and essentials selected for productive farms.</p>
                             </div>
                         </article>
                         <article class="flex items-start gap-4">
@@ -374,15 +387,15 @@
                             </span>
                             <div>
                                 <h3 class="font-extrabold text-agri-forest">Practical support</h3>
-                                <p class="mt-1 text-sm leading-6 text-agri-forest/65">Helpful guidance to support you throughout the growing season.</p>
+                                <p class="mt-1 text-base leading-6 text-agri-forest/65">Helpful guidance to support you throughout the growing season.</p>
                             </div>
                         </article>
                     </div>
 
                     <div class="relative mx-auto h-64 w-full max-w-sm overflow-hidden rounded-3xl sm:h-80 lg:h-72">
-                        <img src="{% static 'images/growing together.jpg' %}" alt="Farmers working together to grow healthy produce" class="h-full w-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-agri-forest/45 to-transparent"></div>
-                        <span class="absolute bottom-4 left-4 rounded-full bg-white/90 px-4 py-2 text-xs font-extrabold text-agri-forest shadow-sm">Growing together</span>
+                        <img src="https://i.pinimg.com/1200x/1d/69/ac/1d69acefbc6b531105603cc65c254ba8.jpg" alt="Farmers working together to grow healthy produce" class="h-full w-full object-cover">
+                        <div class="absolute inset-0 bg-linear-to-t from-agri-forest/45 to-transparent"></div>
+                        <span class="absolute bottom-4 left-4 rounded-full bg-agri-harvest px-4 py-2 text-xs font-extrabold text-agri-forest shadow-sm">Growing together</span>
                     </div>
 
                     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
@@ -392,7 +405,7 @@
                             </span>
                             <div>
                                 <h3 class="font-extrabold text-agri-forest">Sustainable farming</h3>
-                                <p class="mt-1 text-sm leading-6 text-agri-forest/65">Climate-smart practices that care for farms and future generations.</p>
+                                <p class="mt-1 text-base leading-6 text-agri-forest/65">Climate-smart practices that care for farms and future generations.</p>
                             </div>
                         </article>
                         <article class="flex items-start gap-4">
@@ -401,13 +414,15 @@
                             </span>
                             <div>
                                 <h3 class="font-extrabold text-agri-forest">Stronger market links</h3>
-                                <p class="mt-1 text-sm leading-6 text-agri-forest/65">Connect with buyers and discover better routes for your produce.</p>
+                                <p class="mt-1 text-base leading-6 text-agri-forest/65">Connect with buyers and discover better routes for your produce.</p>
                             </div>
                         </article>
                     </div>
                 </div>
             </div>
         </section>
+
+
 
         <!-- ================== FARM CARE MADE SIMPLE ==================== -->
         <section class="relative isolate overflow-hidden bg-agri-forest px-6 py-14 sm:px-8 sm:py-16 lg:px-12">
@@ -471,6 +486,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="{% static 'scripts/cart.js' %}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             if (window.lucide && typeof window.lucide.createIcons === "function") {

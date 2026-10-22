@@ -28,8 +28,11 @@
                         Sign In
                     </a>
 
-                    <a class="relative rounded-full p-2 text-agri-forest bg-agri-harvest">
-                        <i data-lucide="shopping-cart"></i>  
+                    <a data-cart-link data-count="{{ cart_item_count }}" href="{% url 'products:cart' %}" aria-label="Shopping cart, {{ cart_item_count }} {% if cart_item_count == 1 %}item{% else %}items{% endif %}" class="relative rounded-full p-2 text-agri-forest bg-agri-harvest">
+                        <i data-lucide="shopping-cart"></i>
+                        {% if cart_item_count %}
+                            <span data-cart-badge role="status" aria-live="polite" class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-agri-cream bg-red-600 px-1 text-[10px] font-extrabold leading-none text-white">{{ cart_item_count }}</span>
+                        {% endif %}
                     </a>
                 </div>
                 
@@ -68,6 +71,6 @@
         }
       });
     </script>
-    <script src="{% static 'scripts/script.js' %}"></script>
+    <script src="{% static 'scripts/cart.js' %}"></script>
     </body>
 </html>

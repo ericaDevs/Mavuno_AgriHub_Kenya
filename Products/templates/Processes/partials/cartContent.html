@@ -1,0 +1,116 @@
+<section class="mx-auto max-w-7xl px-6 py-10 sm:px-8 sm:py-14" aria-label="Shopping cart contents">
+    {% if items %}
+        <div class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+            <div class="space-y-4">
+                {% for item in items %}
+                    <article class="rounded-2xl border border-agri-forest/10 bg-white p-4 shadow-sm sm:p-5">
+                        <div class="flex flex-col gap-4 sm:flex-row">
+                            <a href="{% url 'products:detail' item.product.pk %}" class="shrink-0">
+                                {% if item.image %}
+                                    <img src="{{ item.image.image.url }}" alt="{{ item.image.alt_text|default:item.product.name }}" class="h-28 w-full rounded-xl bg-agri-cream object-cover sm:w-32">
+                                {% else %}
+                                    <div class="flex h-28 w-full items-center justify-center rounded-xl bg-agri-cream text-agri-forest/45 sm:w-32">
+                                        <i data-lucide="image" class="h-6 w-6" aria-hidden="true"></i>
+                                        <span class="sr-only">Image unavailable</span>
+                                    </div>
+                                {% endif %}
+                            </a>
+
+                            <div class="flex min-w-0 flex-1 flex-col">
+                                <div class="flex flex-wrap items-start justify-between gap-3">
+                                    <div>
+                                        <p class="text-[10px] font-extrabold uppercase tracking-[0.14em] text-agri-leaf">{{ item.product.get_product_category_display }}</p>
+                                        <h2 class="mt-1 text-base font-extrabold text-agri-forest">
+                                            <a href="{% url 'products:detail' item.product.pk %}" class="hover:text-agri-leaf">{{ item.product.name }}</a>
+                                        </h2>
+                                        <p class="mt-1 text-xs text-agri-forest/55">KSh {{ item.product.price_per_unit|floatformat:2 }} per unit</p>
+                                    </div>
+                                    <p class="text-base font-extrabold text-agri-forest">KSh {{ item.line_total|floatformat:2 }}</p>
+                                </div>
+
+                                <div class="mt-auto flex flex-wrap items-end justify-between gap-4 pt-5">
+                                    <div>
+                                        <span class="mb-1 block text-[11px] font-bold text-agri-forest/65">Quantity</span>
+                                        <div class="inline-flex h-10 items-center overflow-hidden rounded-lg border border-agri-forest/15">
+                                            <form method="post" action="{% url 'products:cart_update' item.product.pk %}" data-cart-operation>
+                                                {% csrf_token %}
+                                                <input type="hidden" name="adjustment" value="-1">
+                                                <button type="submit" aria-label="Decrease {{ item.product.name }} quantity" class="flex h-10 w-10 items-center justify-center text-agri-forest transition hover:bg-agri-cream focus:outline-none focus:ring-2 focus:ring-inset focus:ring-agri-leaf">
+                                                    <i data-lucide="minus" class="h-4 w-4" aria-hidden="true"></i>
+                                                </button>
+                                            </form>
+                                            <span aria-live="polite" class="min-w-10 px-2 text-center text-sm font-extrabold text-agri-forest">{{ item.quantity }}</span>
+                                            <form method="post" action="{% url 'products:cart_update' item.product.pk %}" data-cart-operation>
+                                                {% csrf_token %}
+                                                <input type="hidden" name="adjustment" value="1">
+                                                <button type="submit" aria-label="Increase {{ item.product.name }} quantity" {% if item.quantity >= item.product.stock_quantity %}disabled{% endif %} class="flex h-10 w-10 items-center justify-center text-agri-forest transition hover:bg-agri-cream focus:outline-none focus:ring-2 focus:ring-inset focus:ring-agri-leaf disabled:cursor-not-allowed disabled:opacity-40">
+                                                    <i data-lucide="plus" class="h-4 w-4" aria-hidden="true"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <form method="post" action="{% url 'products:cart_remove' item.product.pk %}" data-cart-operation>
+                                        {% csrf_token %}
+                                        <button type="submit" class="inline-flex items-center gap-1.5 text-xs font-bold text-red-700 transition hover:text-red-900">
+                                            <i data-lucide="trash-2" class="h-4 w-4" aria-hidden="true"></i>
+                                            Remove
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+
+                <a href="{% url 'products:products' %}" class="inline-flex items-center gap-2 py-2 text-sm font-extrabold text-agri-forest transition hover:text-agri-leaf">
+                    <i data-lucide="arrow-left" class="h-4 w-4" aria-hidden="true"></i>
+                    Continue shopping
+                </a>
+            </div>
+
+            <aside class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-6" aria-labelledby="order-summary-title">
+                <h2 id="order-summary-title" class="text-lg font-extrabold text-agri-forest">Order summary</h2>
+                <div class="mt-5 space-y-3 border-b border-agri-forest/10 pb-5 text-sm">
+                    <div class="flex justify-between gap-4 text-agri-forest/65">
+                        <span>Items ({{ item_count }})</span>
+                        <span class="font-bold text-agri-forest">KSh {{ subtotal|floatformat:2 }}</span>
+                    </div>
+                    <div class="flex justify-between gap-4 text-agri-forest/65">
+                        <span>Delivery</span>
+                        <span class="font-bold text-agri-forest">Calculated at checkout</span>
+                    </div>
+                </div>
+                <div class="flex justify-between gap-4 py-5 text-base font-extrabold text-agri-forest">
+                    <span>Subtotal</span>
+                    <span>KSh {{ subtotal|floatformat:2 }}</span>
+                </div>
+                <button type="button" disabled title="Checkout is not available yet" class="inline-flex min-h-12 w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-agri-forest px-5 py-3 text-sm font-extrabold text-white opacity-55">
+                    <i data-lucide="lock-keyhole" class="h-4 w-4" aria-hidden="true"></i>
+                    Checkout coming soon
+                </button>
+                <p class="mt-3 text-xs leading-5 text-agri-forest/55">
+                    Your cart is saved for this session. Order placement and payment will be available once checkout is connected.
+                </p>
+                <div class="mt-5 flex items-center gap-2 rounded-xl bg-agri-cream p-3 text-xs font-semibold leading-5 text-agri-forest/70">
+                    <i data-lucide="shield-check" class="h-4 w-4 shrink-0 text-agri-leaf" aria-hidden="true"></i>
+                    Product prices are shown in Kenyan shillings.
+                </div>
+            </aside>
+        </div>
+    {% else %}
+        <div class="mx-auto max-w-xl rounded-3xl border border-agri-forest/10 bg-white px-6 py-14 text-center shadow-sm sm:px-10">
+            <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-agri-cream text-agri-leaf">
+                <i data-lucide="shopping-basket" class="h-8 w-8" aria-hidden="true"></i>
+            </span>
+            <h2 class="mt-5 text-2xl font-extrabold text-agri-forest">Your cart is empty</h2>
+            <p class="mx-auto mt-2 max-w-sm text-sm leading-6 text-agri-forest/60">
+                Browse our catalog and add the products you need. Your selections will appear here.
+            </p>
+            <a href="{% url 'products:products' %}" class="mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-agri-forest px-6 py-3 text-sm font-extrabold text-white transition hover:bg-agri-leaf">
+                <i data-lucide="sprout" class="h-4 w-4" aria-hidden="true"></i>
+                Browse products
+            </a>
+        </div>
+    {% endif %}
+</section>
