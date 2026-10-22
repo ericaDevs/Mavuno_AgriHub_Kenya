@@ -11,8 +11,14 @@
                     <h1 class="mt-3 text-4xl font-extrabold tracking-tight md:text-5xl">Fresh solutions for every farm</h1>
                     <p class="mt-3 max-w-2xl text-white/85">Discover our range of organic and sustainable farming products designed to help you grow healthier crops.</p>
                 </div>
+
+
+                <!-- SEARCH FUNCTION FORM -->
                 <form method="get" role="search" class="flex w-full items-center gap-2 rounded-full border border-white/20 bg-white px-4 py-3 text-agri-forest shadow-sm lg:max-w-sm">
-                    {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+                    {% if selected_category %}
+                        <input type="hidden" name="category" value="{{ selected_category }}">
+                    {% endif %}
+                    
                     <label class="sr-only" for="catalog-search">Search products</label>
                     <input id="catalog-search" type="search" name="q" value="{{ search }}" placeholder="Search products" class="min-w-0 flex-1 bg-transparent text-sm placeholder:text-agri-forest/45 focus:outline-none">
                     <button type="submit" class="text-sm font-bold text-agri-forest hover:text-agri-leaf">Search</button>

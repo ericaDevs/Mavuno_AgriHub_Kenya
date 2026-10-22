@@ -1,5 +1,4 @@
 from decimal import Decimal
-
 from django.contrib import messages
 from django.contrib.messages import get_messages
 from django.db.models import Count, Q
@@ -16,6 +15,8 @@ from .models import Product
 
 # CATALOG PAGE VIEW
 def catalog(request):
+    
+    # Search funtionality
     search = request.GET.get("q", "").strip()
     category = request.GET.get("category", "").strip()
     products = Product.objects.filter(is_active=True).prefetch_related("images")
@@ -57,6 +58,10 @@ def product_detail(request, pk):
     return render(request, "Processes/productDetail.html", {"product": product})
 
 
+
+
+
+# CART CONTENT VIEWS
 def _cart_context(request):
     cart = get_session_cart(request)
     products = Product.objects.filter(
