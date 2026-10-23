@@ -1,68 +1,88 @@
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm, LoginForm
-from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
-from django.contrib.auth.decorators import login_required
+from urllib.parse import urlencode
 
-# USER REGISTRATION VIEW
+from django.contrib import messages
+from django.contrib.auth import authenticate, get_user_model, login as auth_login
+from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
+
+from .forms import CustomUserCreationForm, LoginForm
+
+
 def register(request):
-    if request.method == 'POST':
+    next_url = request.POST.get("next", "") or request.GET.get("next", "")
+    if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "Account created successfully!")
-            return redirect('authentication:login')
-        else:
-            messages.error(request, 'An error occurred while creating the account, please check the form and try again.')
-            return render(request, 'Auth/register.html', {'form': form})
-    form = CustomUserCreationForm()
-    return render(request, 'Auth/register.html', {'form' : form})
+            login_url = reverse("authentication:login")
+            if url_has_allowed_host_and_scheme(
+                next_url,
+                allowed_hosts={request.get_host()},
+            ):
+                login_url = f"{login_url}?{urlencode({'next': next_url})}"
+            return redirect(login_url)
+        messages.error(
+            request,
+            "An error occurred while creating the account, please check the form and try again.",
+        )
+    else:
+        form = CustomUserCreationForm()
+
+    return render(request, "Auth/register.html", {"form": form, "next": next_url})
 
 
-# ADMIN AUTHORIZATION & AUTHENTICATION
 def login(request):
     if request.user.is_authenticated:
-        return redirect('authentication:overview')
+        next_url = request.GET.get("next", "")
+        if url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+            return redirect(next_url)
+        return redirect("home")
 
     form = LoginForm(request.POST if request.method == "POST" else None)
+    next_url = request.POST.get("next", "") or request.GET.get("next", "")
 
     if request.method == "POST":
-        username = request.POST.get("username", "").strip()
-        email = request.POST.get("email", "")
-        password = request.POST.get("password", "")
+        if form.is_valid():
+            User = get_user_model()
+            user_record = User.objects.filter(
+                username__iexact=form.cleaned_data["username"].strip(),
+                email__iexact=form.cleaned_data["email"].strip(),
+            ).first()
+            user = None
+            if user_record is not None:
+                user = authenticate(
+                    request,
+                    username=user_record.get_username(),
+                    password=form.cleaned_data["password"],
+                )
 
-        if not username or not email or not password:
+            if user is not None:
+                auth_login(request, user)
+                messages.success(request, "Logged in successfully!")
+                if url_has_allowed_host_and_scheme(
+                    next_url,
+                    allowed_hosts={request.get_host()},
+                ):
+                    return redirect(next_url)
+                return redirect("home")
+
+            messages.error(request, "Invalid credentials, please check and try again!")
+        else:
             messages.error(request, "All fields are required!")
-            return render(request, "Auth/login.html", {"form": form})
 
-        user = authenticate(request, username = username, email=email, password = password)
-        
-        if user is None:
-            from django.contrib.auth import get_user_model
-            UserModel = get_user_model()
-            try:
-                # Try finding user by email or case-insensitive username
-                user_obj = UserModel.objects.filter(email__iexact=username).first()
-                if not user_obj:
-                    user_obj = UserModel.objects.filter(username__iexact=username).first()
-                if user_obj:
-                    user = authenticate(request, username=user_obj.username, password=password)
-            except Exception:
-                pass
-
-        if user is not None:
-            auth_login(request, user)
-            messages.success(request, "Logged in successfully!")
-            return redirect('authentication:overview')
-        messages.error(request, "Invalid credentials, please check and try again!")
-        return render(request, "Auth/login.html", {"form": form})
-    
-    return render(request, 'Auth/login.html', {"form": form})
+    return render(
+        request,
+        "Auth/login.html",
+        {"form": form, "next": next_url},
+    )
 
 
-# LOGOUT
 @login_required
 def logout(request):
     auth_logout(request)
     messages.success(request, "Logged out successfully!")
-    return redirect('authentication:login')
+    return redirect("authentication:login")

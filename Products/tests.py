@@ -164,7 +164,7 @@ class ProductManagementTests(TestCase):
         self.assertContains(cart_response, "Hybrid maize seed")
         self.assertContains(cart_response, "KSh 1250.00")
         self.assertContains(cart_response, "Order summary")
-        self.assertContains(cart_response, "Checkout coming soon")
+        self.assertContains(cart_response, "Sign in is required to continue to checkout.")
         self.assertEqual(cart_response.context["cart_item_count"], 1)
         self.assertContains(cart_response, 'aria-label="Shopping cart, 1 item"')
 

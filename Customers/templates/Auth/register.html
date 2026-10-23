@@ -77,6 +77,7 @@
 
                     <form method="POST" action="{% url 'authentication:register' %}" class="mt-7 space-y-4">
                         {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}">
                         {% if form.non_field_errors %}
                             <div class="text-sm text-red-700" role="alert">
                                 {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
@@ -123,7 +124,7 @@
                         </button>
                     </form>
                     <p class="mt-6 text-center text-sm text-agri-forest/60">
-                        Already have an account? <a href="{% url 'authentication:login' %}" class="font-bold text-agri-forest hover:text-agri-leaf">Sign in</a>
+                        Already have an account? <a href="{% url 'authentication:login' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="font-bold text-agri-forest hover:text-agri-leaf">Sign in</a>
                     </p>
                 </div>
             </div>

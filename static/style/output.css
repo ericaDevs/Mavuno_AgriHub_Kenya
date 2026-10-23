@@ -578,6 +578,9 @@
   .h-\[screen\] {
     height: screen;
   }
+  .h-fit {
+    height: fit-content;
+  }
   .h-full {
     height: 100%;
   }
@@ -1820,6 +1823,9 @@
   .uppercase {
     text-transform: uppercase;
   }
+  .italic {
+    font-style: italic;
+  }
   .underline {
     text-decoration-line: underline;
   }
@@ -2512,6 +2518,9 @@
     }
     .lg\:grid-cols-\[16rem_minmax\(0\,1fr\)\] {
       grid-template-columns: 16rem minmax(0,1fr);
+    }
+    .lg\:grid-cols-\[minmax\(0\,1fr\)_20rem\] {
+      grid-template-columns: minmax(0,1fr) 20rem;
     }
     .lg\:grid-cols-\[minmax\(0\,1fr\)_22rem\] {
       grid-template-columns: minmax(0,1fr) 22rem;

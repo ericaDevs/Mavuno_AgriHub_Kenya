@@ -35,7 +35,7 @@
                 <div aria-hidden="true" class="pointer-events-none absolute -right-12 -top-16 h-48 w-48 rounded-full border border-agri-harvest/20"></div>
                 <div class="relative">
                     <p class="text-sm font-extrabold tracking-[0.16em] text-agri-harvest">MAVUNO AGRIHUB</p>
-                    <p class="mt-2 text-xs font-semibold tracking-wide text-agri-cream/70">ADMINISTRATOR PORTAL</p>
+                    <p class="mt-2 text-xs font-semibold tracking-wide text-agri-cream/70">CUSTOMER ACCOUNT</p>
                 </div>
 
                 <div class="relative mt-10 max-w-md lg:mt-0">
@@ -44,7 +44,7 @@
                         Your work starts here
                     </span>
                     <h1 class="mt-6 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
-                        Welcome back to your hub.
+                        Welcome back.
                     </h1>
                     <p class="mt-4 text-sm leading-6 text-agri-cream/75 sm:text-base sm:leading-7">
                         Sign in to manage your store and help connect farming communities with the resources they need.
@@ -60,7 +60,7 @@
                 <div class="mx-auto w-full max-w-md">
                     <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-agri-leaf">Good to see you</p>
                     <h2 id="sign-in-title" class="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">Sign in to your account</h2>
-                    <p class="mt-2 text-sm leading-6 text-agri-forest/60">Enter your details to continue to the admin portal.</p>
+                    <p class="mt-2 text-sm leading-6 text-agri-forest/60">                    Enter your account details to continue shopping.</p>
 
                     <form method="post" action="{% url 'authentication:login' %}" class="mt-8 space-y-5">
                         {% csrf_token %}
@@ -94,7 +94,7 @@
                         <button type="submit" class="inline-flex cursor-pointer w-full items-center justify-center rounded-xl bg-agri-forest px-5 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-agri-forest/15 transition hover:bg-agri-leaf focus:outline-none focus:ring-4 focus:ring-agri-leaf/25"> Sign in </button>
                     </form>
                     <p class="mt-6 text-center text-sm text-agri-forest/60">
-                        Don't have an account? <a href="{% url 'authentication:register' %}" class="font-bold text-agri-forest hover:text-agri-leaf">Get Started</a>
+                        Don't have an account?                         <a href="{% url 'authentication:register' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="font-bold text-agri-forest hover:text-agri-leaf">Get Started</a>
                     </p>
                 </div>
             </div>

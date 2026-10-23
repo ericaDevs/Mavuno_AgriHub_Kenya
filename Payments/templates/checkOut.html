@@ -8,7 +8,7 @@
             <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-agri-harvest">Almost there</p>
             <h1 class="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">Checkout</h1>
             <p class="mt-2 max-w-2xl text-sm leading-6 text-white/75">
-                Confirm your delivery details, review your order, and choose how you would like to pay.
+                Add delivery details and review your order before confirming it. Payment will be added later.
             </p>
         </div>
     </section>
@@ -23,8 +23,11 @@
             </ol>
         </nav>
 
+
         <div class="mx-auto grid max-w-7xl items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
             <div class="space-y-6">
+
+                <!-- DELIVERY INFORMATION -->
                 <section id="delivery-information" class="scroll-mt-6 rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="delivery-title">
                     <div class="flex items-start gap-4">
                         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-agri-cream font-extrabold text-agri-forest">1</span>
@@ -34,38 +37,46 @@
                         </div>
                     </div>
 
-                    <form class="mt-6">
+                    
+                    <form class="mt-6" method = "POST" action = "{% url 'payments:checkout' %}">
                         {% csrf_token %}
                         <div class="grid gap-5 sm:grid-cols-2">
                             <div>
                                 <label for="delivery-name" class="mb-2 block text-sm font-bold text-agri-forest">Full name</label>
-                                <input id="delivery-name" name="full_name" type="text" autocomplete="name" placeholder="Name of recipient" class="min-h-12 w-full rounded-xl border border-agri-forest/15 bg-white px-4 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">
+                                <input id="delivery-name" name="full_name" type="text" value="{{ form.full_name.value|default_if_none:'' }}" autocomplete="name" placeholder="Name of recipient" required class="min-h-12 w-full rounded-xl border border-agri-forest/15 bg-white px-4 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">
+                                {% for error in form.full_name.errors %}<p class="mt-1 text-sm text-red-700" role="alert">{{ error }}</p>{% endfor %}
                             </div>
                             <div>
                                 <label for="delivery-phone" class="mb-2 block text-sm font-bold text-agri-forest">Phone number</label>
-                                <input id="delivery-phone" name="phone" type="tel" autocomplete="tel" placeholder="+254 7XX XXX XXX" class="min-h-12 w-full rounded-xl border border-agri-forest/15 bg-white px-4 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">
+                                <input id="delivery-phone" name="phone" type="tel" value="{{ form.phone.value|default_if_none:'' }}" autocomplete="tel" placeholder="+254 7XX XXX XXX" required class="min-h-12 w-full rounded-xl border border-agri-forest/15 bg-white px-4 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">
+                                {% for error in form.phone.errors %}<p class="mt-1 text-sm text-red-700" role="alert">{{ error }}</p>{% endfor %}
                             </div>
                             <div class="sm:col-span-2">
                                 <label for="delivery-email" class="mb-2 block text-sm font-bold text-agri-forest">Email address <span class="font-normal text-agri-forest/50">(optional)</span></label>
-                                <input id="delivery-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" class="min-h-12 w-full rounded-xl border border-agri-forest/15 bg-white px-4 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">
+                                <input id="delivery-email" name="email" type="email" value="{{ form.email.value|default_if_none:'' }}" autocomplete="email" placeholder="you@example.com" class="min-h-12 w-full rounded-xl border border-agri-forest/15 bg-white px-4 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">
+                                {% for error in form.email.errors %}<p class="mt-1 text-sm text-red-700" role="alert">{{ error }}</p>{% endfor %}
                             </div>
                             <div class="sm:col-span-2">
                                 <label for="delivery-address" class="mb-2 block text-sm font-bold text-agri-forest">Delivery address</label>
-                                <textarea id="delivery-address" name="delivery_address" rows="3" autocomplete="street-address" placeholder="County, town, road, and any helpful directions" class="w-full rounded-xl border border-agri-forest/15 bg-white px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20"></textarea>
+                                <textarea id="delivery-address" name="delivery_address" rows="3" autocomplete="street-address" placeholder="County, town, road, and any helpful directions" required class="w-full rounded-xl border border-agri-forest/15 bg-white px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">{{ form.delivery_address.value|default_if_none:'' }}</textarea>
+                                {% for error in form.delivery_address.errors %}<p class="mt-1 text-sm text-red-700" role="alert">{{ error }}</p>{% endfor %}
                             </div>
                             <div class="sm:col-span-2">
                                 <label for="delivery-notes" class="mb-2 block text-sm font-bold text-agri-forest">Delivery notes <span class="font-normal text-agri-forest/50">(optional)</span></label>
-                                <textarea id="delivery-notes" name="delivery_notes" rows="2" placeholder="Landmark, preferred delivery time, or other instructions" class="w-full rounded-xl border border-agri-forest/15 bg-white px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20"></textarea>
+                                <textarea id="delivery-notes" name="delivery_notes" rows="2" placeholder="Landmark, preferred delivery time, or other instructions" class="w-full rounded-xl border border-agri-forest/15 bg-white px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">{{ form.delivery_notes.value|default_if_none:'' }}</textarea>
+                                {% for error in form.delivery_notes.errors %}<p class="mt-1 text-sm text-red-700" role="alert">{{ error }}</p>{% endfor %}
                             </div>
                         </div>
                         <p class="mt-4 rounded-xl bg-agri-cream p-3 text-xs leading-5 text-agri-forest/65">
-                            Backend placeholder: validate and save these details with the pending order, then calculate the delivery fee.
+                            Your details are saved for this checkout and attached to your order when you confirm it.
                         </p>
-                        <button type="button" class="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-agri-forest px-5 py-3 text-sm font-extrabold text-white transition hover:bg-agri-leaf sm:w-auto">
-                            Continue to order review
+                        <button type="submit" class="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-xl cursor-pointer bg-agri-forest px-5 py-3 text-sm font-extrabold text-white transition hover:bg-agri-leaf sm:w-auto">
+                            Save and Continue to order review
                         </button>
                     </form>
                 </section>
+
+
 
                 <section id="order-review" class="scroll-mt-6 rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="review-title">
                     <div class="flex items-start gap-4">
@@ -76,6 +87,8 @@
                         </div>
                     </div>
 
+
+                    <!-- CART ITEMS -->
                     {% if items %}
                         <div class="mt-6 divide-y divide-agri-forest/10">
                             {% for item in items %}
@@ -101,7 +114,22 @@
                     {% endif %}
 
                     <p class="mt-5 rounded-xl bg-agri-cream p-3 text-xs leading-5 text-agri-forest/65">
-                        Backend placeholder: re-check product availability and prices, then create a pending order for customer review.
+                        {% if delivery_data %}
+                            <div class="mb-4 text-sm leading-6 text-agri-forest/75">
+                                <p class="font-bold text-agri-forest">Delivering to {{ delivery_data.full_name }}</p>
+                                <p>{{ delivery_data.delivery_address }}</p>
+                                <p>{{ delivery_data.phone }}{% if delivery_data.email %} · {{ delivery_data.email }}{% endif %}</p>
+                                <a href="#delivery-information" class="font-bold text-agri-leaf underline underline-offset-2">Edit delivery details</a>
+                            </div>
+                            <form method="post" action="{% url 'payments:confirm_order' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-agri-forest px-5 py-3 text-sm font-extrabold text-white transition hover:bg-agri-leaf sm:w-auto">
+                                    Confirm order (payment not requested)
+                                </button>
+                            </form>
+                        {% else %}
+                            Save your delivery details above to review and confirm this order.
+                        {% endif %}
                     </p>
                 </section>
 
@@ -151,19 +179,21 @@
                                 <i data-lucide="bell-ring" class="h-5 w-5" aria-hidden="true"></i>
                             </span>
                             <div>
-                                <h3 class="font-extrabold text-agri-forest">Your order update will appear here</h3>
+                                <h3 class="font-extrabold text-agri-forest">Order confirmation appears after you confirm</h3>
                                 <p class="mt-1 text-sm leading-6 text-agri-forest/65">
-                                    This is a preview of the confirmation area. It will show the order number, payment result, and delivery update after the backend confirms your order.
+                                    The confirmation page will show your order reference and its current status. Payment is not processed yet.
                                 </p>
                             </div>
                         </div>
                     </div>
                     <p class="mt-4 text-xs leading-5 text-agri-forest/55">
-                        Backend placeholder: confirm the order only after verified payment, assign an order reference, and send the customer a confirmation notification.
+                        Orders are recorded as awaiting payment. No payment is requested or processed in this checkout step.
                     </p>
                 </section>
             </div>
 
+
+            <!-- ORDER SUMMARY -->
             <aside class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-6" aria-labelledby="checkout-summary-title">
                 <h2 id="checkout-summary-title" class="text-lg font-extrabold text-agri-forest">Order summary</h2>
                 {% if items %}
@@ -174,7 +204,7 @@
                         </div>
                         <div class="flex justify-between gap-4 text-agri-forest/65">
                             <span>Delivery</span>
-                            <span class="font-bold text-agri-forest">{% if delivery_fee %}KSh {{ delivery_fee|floatformat:2 }}{% else %}To be calculated{% endif %}</span>
+                            <span class="italic text-agri-forest">Free Delivery</span>
                         </div>
                     </div>
                     <div class="flex justify-between gap-4 py-5 text-base font-extrabold text-agri-forest">
