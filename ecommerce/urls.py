@@ -32,5 +32,5 @@ urlpatterns = [
     path('mavuno/', include('Admin.urls')),
     path('customers/', include('Customers.urls')),
     # path('orders/', include('Orders.urls')),
-    # path('payments/', include('Payments.urls'))
+    path('payments/', include('Payments.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

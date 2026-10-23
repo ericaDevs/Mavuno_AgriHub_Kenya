@@ -1,0 +1,199 @@
+{% extends "layout.html" %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+    <section class="bg-agri-forest px-6 pb-10 pt-32 text-white sm:px-8 sm:pb-12 sm:pt-36">
+        <div class="mx-auto max-w-7xl">
+            <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-agri-harvest">Almost there</p>
+            <h1 class="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">Checkout</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-white/75">
+                Confirm your delivery details, review your order, and choose how you would like to pay.
+            </p>
+        </div>
+    </section>
+
+    <div class="bg-agri-cream px-6 py-8 sm:px-8 sm:py-10">
+        <nav aria-label="Checkout progress" class="mx-auto mb-8 max-w-7xl">
+            <ol class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <li><a href="#delivery-information" class="flex items-center gap-3 rounded-xl border border-agri-leaf/30 bg-white p-3 text-sm font-bold text-agri-forest"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-agri-leaf text-white">1</span><span>Delivery</span></a></li>
+                <li><a href="#order-review" class="flex items-center gap-3 rounded-xl border border-agri-forest/10 bg-white p-3 text-sm font-bold text-agri-forest"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-agri-forest/10">2</span><span>Review order</span></a></li>
+                <li><a href="#payment" class="flex items-center gap-3 rounded-xl border border-agri-forest/10 bg-white p-3 text-sm font-bold text-agri-forest"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-agri-forest/10">3</span><span>Payment</span></a></li>
+                <li><a href="#confirmation" class="flex items-center gap-3 rounded-xl border border-agri-forest/10 bg-white p-3 text-sm font-bold text-agri-forest"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-agri-forest/10">4</span><span>Confirmation</span></a></li>
+            </ol>
+        </nav>
+
+        <div class="mx-auto grid max-w-7xl items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+            <div class="space-y-6">
+                <section id="delivery-information" class="scroll-mt-6 rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="delivery-title">
+                    <div class="flex items-start gap-4">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-agri-cream font-extrabold text-agri-forest">1</span>
+                        <div>
+                            <h2 id="delivery-title" class="text-xl font-extrabold text-agri-forest">Delivery information</h2>
+                            <p class="mt-1 text-sm leading-6 text-agri-forest/60">Tell us who will receive the order and where it should be delivered.</p>
+                        </div>
+                    </div>
+
+                    <form class="mt-6">
+                        {% csrf_token %}
+                        <div class="grid gap-5 sm:grid-cols-2">
+                            <div>
+                                <label for="delivery-name" class="mb-2 block text-sm font-bold text-agri-forest">Full name</label>
+                                <input id="delivery-name" name="full_name" type="text" autocomplete="name" placeholder="Name of recipient" class="min-h-12 w-full rounded-xl border border-agri-forest/15 bg-white px-4 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">
+                            </div>
+                            <div>
+                                <label for="delivery-phone" class="mb-2 block text-sm font-bold text-agri-forest">Phone number</label>
+                                <input id="delivery-phone" name="phone" type="tel" autocomplete="tel" placeholder="+254 7XX XXX XXX" class="min-h-12 w-full rounded-xl border border-agri-forest/15 bg-white px-4 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label for="delivery-email" class="mb-2 block text-sm font-bold text-agri-forest">Email address <span class="font-normal text-agri-forest/50">(optional)</span></label>
+                                <input id="delivery-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" class="min-h-12 w-full rounded-xl border border-agri-forest/15 bg-white px-4 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label for="delivery-address" class="mb-2 block text-sm font-bold text-agri-forest">Delivery address</label>
+                                <textarea id="delivery-address" name="delivery_address" rows="3" autocomplete="street-address" placeholder="County, town, road, and any helpful directions" class="w-full rounded-xl border border-agri-forest/15 bg-white px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20"></textarea>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label for="delivery-notes" class="mb-2 block text-sm font-bold text-agri-forest">Delivery notes <span class="font-normal text-agri-forest/50">(optional)</span></label>
+                                <textarea id="delivery-notes" name="delivery_notes" rows="2" placeholder="Landmark, preferred delivery time, or other instructions" class="w-full rounded-xl border border-agri-forest/15 bg-white px-4 py-3 text-sm text-agri-forest outline-none transition placeholder:text-agri-forest/40 focus:border-agri-leaf focus:ring-2 focus:ring-agri-leaf/20"></textarea>
+                            </div>
+                        </div>
+                        <p class="mt-4 rounded-xl bg-agri-cream p-3 text-xs leading-5 text-agri-forest/65">
+                            Backend placeholder: validate and save these details with the pending order, then calculate the delivery fee.
+                        </p>
+                        <button type="button" class="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-agri-forest px-5 py-3 text-sm font-extrabold text-white transition hover:bg-agri-leaf sm:w-auto">
+                            Continue to order review
+                        </button>
+                    </form>
+                </section>
+
+                <section id="order-review" class="scroll-mt-6 rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="review-title">
+                    <div class="flex items-start gap-4">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-agri-cream font-extrabold text-agri-forest">2</span>
+                        <div>
+                            <h2 id="review-title" class="text-xl font-extrabold text-agri-forest">Confirm your order</h2>
+                            <p class="mt-1 text-sm leading-6 text-agri-forest/60">Check the selected products, quantities, delivery details, and final total before paying.</p>
+                        </div>
+                    </div>
+
+                    {% if items %}
+                        <div class="mt-6 divide-y divide-agri-forest/10">
+                            {% for item in items %}
+                                <div class="flex gap-4 py-4 first:pt-0 last:pb-0">
+                                    {% if item.image %}
+                                        <img src="{{ item.image.image.url }}" alt="{{ item.image.alt_text|default:item.product.name }}" class="h-16 w-16 rounded-xl object-cover">
+                                    {% else %}
+                                        <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-agri-cream text-xs font-bold text-agri-forest/50">Product</div>
+                                    {% endif %}
+                                    <div class="min-w-0 flex-1">
+                                        <h3 class="font-bold text-agri-forest">{{ item.product.name }}</h3>
+                                        <p class="mt-1 text-sm text-agri-forest/60">Quantity: {{ item.quantity }}</p>
+                                    </div>
+                                    <p class="shrink-0 text-sm font-extrabold text-agri-forest">KSh {{ item.line_total|floatformat:2 }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="mt-6 rounded-xl border border-dashed border-agri-forest/20 bg-agri-cream/60 p-5 text-sm leading-6 text-agri-forest/65">
+                            Your cart items and delivery details will appear here once the checkout view passes them to this page.
+                            <a href="{% url 'products:cart' %}" class="ml-1 font-extrabold text-agri-leaf underline underline-offset-2">Return to cart</a>
+                        </div>
+                    {% endif %}
+
+                    <p class="mt-5 rounded-xl bg-agri-cream p-3 text-xs leading-5 text-agri-forest/65">
+                        Backend placeholder: re-check product availability and prices, then create a pending order for customer review.
+                    </p>
+                </section>
+
+                <section id="payment" class="scroll-mt-6 rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="payment-title">
+                    <div class="flex items-start gap-4">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-agri-cream font-extrabold text-agri-forest">3</span>
+                        <div>
+                            <h2 id="payment-title" class="text-xl font-extrabold text-agri-forest">Payment</h2>
+                            <p class="mt-1 text-sm leading-6 text-agri-forest/60">Mpesa payment is the only option. Payment will only be requested after the order is reviewed.</p>
+                        </div>
+                    </div>
+
+                    <fieldset class="mt-6 space-y-3">
+                        <legend class="mb-3 text-sm font-bold text-agri-forest">Available payment methods</legend>
+                        <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-agri-forest/15 p-4 transition has-checked:border-agri-leaf has-checked:bg-agri-cream/60">
+                            <input type="radio" name="payment_method" value="mpesa" class="h-4 w-4 accent-agri-leaf">
+                            <span class="flex-1">
+                                <span class="block text-sm font-bold text-agri-forest">M-Pesa</span>
+                                <span class="mt-1 block text-xs text-agri-forest/55">Mobile money payment</span>
+                            </span>
+                            <span class="rounded-md bg-agri-cream px-2 py-1 text-xs font-extrabold text-agri-leaf">M-PESA</span>
+                        </label>
+                    </fieldset>
+
+                    <div class="mt-5 flex items-start gap-3 rounded-xl bg-agri-cream p-4 text-xs leading-5 text-agri-forest/65">
+                        <i data-lucide="shield-check" class="mt-0.5 h-4 w-4 shrink-0 text-agri-leaf" aria-hidden="true"></i>
+                        <p>Backend placeholder: securely create a payment request with the selected provider, then process its verified response. No payment is taken by this page yet.</p>
+                    </div>
+                    <button type="button" disabled class="mt-5 inline-flex min-h-12 w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-agri-harvest px-5 py-3 text-sm font-extrabold text-agri-forest hover:bg-agri-leaf hover:text-agri-cream transition sm:w-auto">
+                        <i data-lucide="credit-card-check" class="h-4 w-4" aria-hidden="true"></i>
+                        Place order and pay
+                    </button>
+                </section>
+
+                <section id="confirmation" class="scroll-mt-6 rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="confirmation-title">
+                    <div class="flex items-start gap-4">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-agri-cream font-extrabold text-agri-forest">4</span>
+                        <div>
+                            <h2 id="confirmation-title" class="text-xl font-extrabold text-agri-forest">Order confirmation</h2>
+                            <p class="mt-1 text-sm leading-6 text-agri-forest/60">Once payment is confirmed, the order status and next steps will be shown here.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 rounded-xl border border-dashed border-agri-leaf/40 bg-agri-cream/60 p-5 sm:p-6">
+                        <div class="flex items-start gap-4">
+                            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-agri-leaf">
+                                <i data-lucide="bell-ring" class="h-5 w-5" aria-hidden="true"></i>
+                            </span>
+                            <div>
+                                <h3 class="font-extrabold text-agri-forest">Your order update will appear here</h3>
+                                <p class="mt-1 text-sm leading-6 text-agri-forest/65">
+                                    This is a preview of the confirmation area. It will show the order number, payment result, and delivery update after the backend confirms your order.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-xs leading-5 text-agri-forest/55">
+                        Backend placeholder: confirm the order only after verified payment, assign an order reference, and send the customer a confirmation notification.
+                    </p>
+                </section>
+            </div>
+
+            <aside class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-6" aria-labelledby="checkout-summary-title">
+                <h2 id="checkout-summary-title" class="text-lg font-extrabold text-agri-forest">Order summary</h2>
+                {% if items %}
+                    <div class="mt-5 space-y-3 border-b border-agri-forest/10 pb-5 text-sm">
+                        <div class="flex justify-between gap-4 text-agri-forest/65">
+                            <span>Items ({{ item_count }})</span>
+                            <span class="font-bold text-agri-forest">KSh {{ subtotal|floatformat:2 }}</span>
+                        </div>
+                        <div class="flex justify-between gap-4 text-agri-forest/65">
+                            <span>Delivery</span>
+                            <span class="font-bold text-agri-forest">{% if delivery_fee %}KSh {{ delivery_fee|floatformat:2 }}{% else %}To be calculated{% endif %}</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between gap-4 py-5 text-base font-extrabold text-agri-forest">
+                        <span>Total</span>
+                        <span>{% if total %}KSh {{ total|floatformat:2 }}{% else %}Calculated at checkout{% endif %}</span>
+                    </div>
+                {% else %}
+                    <div class="mt-5 rounded-xl bg-agri-cream p-4 text-sm leading-6 text-agri-forest/65">
+                        Cart subtotal, delivery fee, and final total will be shown here when checkout data is connected.
+                    </div>
+                {% endif %}
+                <a href="{% url 'products:cart' %}" class="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-agri-forest/15 px-4 py-2 text-sm font-bold text-agri-forest transition hover:bg-agri-cream">
+                    Back to cart
+                </a>
+                <div class="mt-5 flex items-center gap-2 rounded-xl bg-agri-cream p-3 text-xs font-semibold leading-5 text-agri-forest/70">
+                    <i data-lucide="map-pin" class="h-4 w-4 shrink-0 text-agri-leaf" aria-hidden="true"></i>
+                    Prices are shown in Kenyan shillings.
+                </div>
+            </aside>
+        </div>
+    </div>
+{% endblock %}
