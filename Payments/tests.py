@@ -103,7 +103,7 @@ class CheckoutTests(TestCase):
         self.assertRedirects(
             response,
             reverse(
-                "payments:order_confirmation",
+                "orders:order_confirmation",
                 kwargs={"order_reference": order.order_reff},
             ),
             fetch_redirect_response=False,
@@ -127,7 +127,7 @@ class CheckoutTests(TestCase):
 
         confirmation = self.client.get(
             reverse(
-                "payments:order_confirmation",
+                "orders:order_confirmation",
                 kwargs={"order_reference": order.order_reff},
             )
         )
@@ -162,7 +162,7 @@ class CheckoutTests(TestCase):
 
         response = self.client.get(
             reverse(
-                "payments:order_confirmation",
+                "orders:order_confirmation",
                 kwargs={"order_reference": order.order_reff},
             )
         )

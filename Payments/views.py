@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 
@@ -83,6 +83,7 @@ def checkout_page(request):
         messages.info(request, "Add available products to your cart before checkout.")
         return redirect("products:cart")
 
+    # Saving delivery information
     if request.method == "POST":
         form = CustomerDeliveryInfor(request.POST)
         if form.is_valid():
@@ -92,6 +93,8 @@ def checkout_page(request):
         context = _checkout_context(request, form=form)
 
     return render(request, "checkOut.html", context)
+
+
 
 
 @login_required(login_url="authentication:login")
@@ -164,16 +167,13 @@ def confirm_order(request):
     request.session.pop("checkout_delivery", None)
     messages.success(request, "Your order was received and is awaiting payment.")
     return redirect(
-        "payments:order_confirmation",
+        "orders:order_confirmation",
         order_reference=order.order_reff,
     )
 
 
-@login_required(login_url="authentication:login")
-def order_confirmation(request, order_reference):
-    order = get_object_or_404(
-        Order.objects.prefetch_related("items").select_related("delivery"),
-        order_reff=order_reference,
-        customer=request.user,
-    )
-    return render(request, "Payments/orderConfirmation.html", {"order": order})
+
+
+# PAY WITH MPESA
+def pay_with_mpesa(request):
+    return render(request, "mpesa.html")

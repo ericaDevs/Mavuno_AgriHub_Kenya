@@ -82,7 +82,7 @@
                     <div class="flex items-start gap-4">
                         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-agri-cream font-extrabold text-agri-forest">2</span>
                         <div>
-                            <h2 id="review-title" class="text-xl font-extrabold text-agri-forest">Confirm your order</h2>
+                            <h2 id="review-title" class="text-xl font-extrabold text-agri-forest">Review your order</h2>
                             <p class="mt-1 text-sm leading-6 text-agri-forest/60">Check the selected products, quantities, delivery details, and final total before paying.</p>
                         </div>
                     </div>
@@ -121,73 +121,16 @@
                                 <p>{{ delivery_data.phone }}{% if delivery_data.email %} · {{ delivery_data.email }}{% endif %}</p>
                                 <a href="#delivery-information" class="font-bold text-agri-leaf underline underline-offset-2">Edit delivery details</a>
                             </div>
+
                             <form method="post" action="{% url 'payments:confirm_order' %}">
                                 {% csrf_token %}
-                                <button type="submit" class="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-agri-forest px-5 py-3 text-sm font-extrabold text-white transition hover:bg-agri-leaf sm:w-auto">
-                                    Confirm order (payment not requested)
+                                <button type="submit" class="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-agri-forest px-5 py-3 text-sm font-extrabold text-white cursor-pointer transition hover:bg-agri-leaf sm:w-auto">
+                                    Confirm and Continue to Pay
                                 </button>
                             </form>
                         {% else %}
                             Save your delivery details above to review and confirm this order.
                         {% endif %}
-                    </p>
-                </section>
-
-                <section id="payment" class="scroll-mt-6 rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="payment-title">
-                    <div class="flex items-start gap-4">
-                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-agri-cream font-extrabold text-agri-forest">3</span>
-                        <div>
-                            <h2 id="payment-title" class="text-xl font-extrabold text-agri-forest">Payment</h2>
-                            <p class="mt-1 text-sm leading-6 text-agri-forest/60">Mpesa payment is the only option. Payment will only be requested after the order is reviewed.</p>
-                        </div>
-                    </div>
-
-                    <fieldset class="mt-6 space-y-3">
-                        <legend class="mb-3 text-sm font-bold text-agri-forest">Available payment methods</legend>
-                        <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-agri-forest/15 p-4 transition has-checked:border-agri-leaf has-checked:bg-agri-cream/60">
-                            <input type="radio" name="payment_method" value="mpesa" class="h-4 w-4 accent-agri-leaf">
-                            <span class="flex-1">
-                                <span class="block text-sm font-bold text-agri-forest">M-Pesa</span>
-                                <span class="mt-1 block text-xs text-agri-forest/55">Mobile money payment</span>
-                            </span>
-                            <span class="rounded-md bg-agri-cream px-2 py-1 text-xs font-extrabold text-agri-leaf">M-PESA</span>
-                        </label>
-                    </fieldset>
-
-                    <div class="mt-5 flex items-start gap-3 rounded-xl bg-agri-cream p-4 text-xs leading-5 text-agri-forest/65">
-                        <i data-lucide="shield-check" class="mt-0.5 h-4 w-4 shrink-0 text-agri-leaf" aria-hidden="true"></i>
-                        <p>Backend placeholder: securely create a payment request with the selected provider, then process its verified response. No payment is taken by this page yet.</p>
-                    </div>
-                    <button type="button" disabled class="mt-5 inline-flex min-h-12 w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-agri-harvest px-5 py-3 text-sm font-extrabold text-agri-forest hover:bg-agri-leaf hover:text-agri-cream transition sm:w-auto">
-                        <i data-lucide="credit-card-check" class="h-4 w-4" aria-hidden="true"></i>
-                        Place order and pay
-                    </button>
-                </section>
-
-                <section id="confirmation" class="scroll-mt-6 rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="confirmation-title">
-                    <div class="flex items-start gap-4">
-                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-agri-cream font-extrabold text-agri-forest">4</span>
-                        <div>
-                            <h2 id="confirmation-title" class="text-xl font-extrabold text-agri-forest">Order confirmation</h2>
-                            <p class="mt-1 text-sm leading-6 text-agri-forest/60">Once payment is confirmed, the order status and next steps will be shown here.</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 rounded-xl border border-dashed border-agri-leaf/40 bg-agri-cream/60 p-5 sm:p-6">
-                        <div class="flex items-start gap-4">
-                            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-agri-leaf">
-                                <i data-lucide="bell-ring" class="h-5 w-5" aria-hidden="true"></i>
-                            </span>
-                            <div>
-                                <h3 class="font-extrabold text-agri-forest">Order confirmation appears after you confirm</h3>
-                                <p class="mt-1 text-sm leading-6 text-agri-forest/65">
-                                    The confirmation page will show your order reference and its current status. Payment is not processed yet.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="mt-4 text-xs leading-5 text-agri-forest/55">
-                        Orders are recorded as awaiting payment. No payment is requested or processed in this checkout step.
                     </p>
                 </section>
             </div>

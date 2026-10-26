@@ -67,8 +67,12 @@
                     <span>KSh {{ order.total_amount|floatformat:2 }}</span>
                 </div>
                 <p class="rounded-xl bg-agri-cream p-3 text-xs leading-5 text-agri-forest/65">
-                    This order is awaiting payment. No payment details have been collected.
+                    This order is awaiting payment.
                 </p>
+
+                <a href="{% url 'payments:mpesa' %}" class="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-agri-forest px-4 py-2 text-sm font-bold text-white transition hover:bg-agri-leaf">
+                    Proceed to Pay with Mpesa
+                </a>
                 <a href="{% url 'products:products' %}" class="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-agri-forest px-4 py-2 text-sm font-bold text-white transition hover:bg-agri-leaf">
                     Continue shopping
                 </a>
