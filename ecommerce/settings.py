@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,8 +28,28 @@ SECRET_KEY = 'django-insecure-60iev5v#nuj$3b4^x1srv=argh1ngkagdgxs)28fdkfxm8$q03
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'comfort-seventy-lumping.ngrok-free.dev',
+    '.comfort-seventy-lumping.ngrok-free.dev',
+    '.ngrok-free.app',
+    '.ngrok-free.dev',
+    '.ngrok.io',
+    '.ngrok.app',
+]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://comfort-seventy-lumping.ngrok-free.dev',
+    'https://*.ngrok-free.dev',
+    'https://*.ngrok-free.app',
+    'https://*.ngrok.io',
+    'https://*.ngrok.app',
+    'http://127.0.0.1',
+    'http://localhost',
+]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -146,3 +169,13 @@ MAILERS = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_AGE = 86400 * 14  # 14 days
+
+
+
+# DARAJA API INTEGRATION
+MPESA_ENV = os.getenv("MPESA_ENV", "sandbox")
+MPESA_CONSUMER_KEY = os.getenv("MPESA_CONSUMER_KEY")
+MPESA_CONSUMER_SECRET = os.getenv("MPESA_CONSUMER_SECRET")
+MPESA_SHORTCODE = os.getenv("MPESA_SHORTCODE")
+MPESA_PASSKEY = os.getenv("MPESA_PASSKEY")
+MPESA_CALLBACK_URL = os.getenv("MPESA_CALLBACK_URL")

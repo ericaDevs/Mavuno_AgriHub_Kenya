@@ -72,10 +72,24 @@
                 credentials: "same-origin",
                 headers: { "X-Requested-With": "XMLHttpRequest" },
             });
-            const data = await response.json();
+
+            const contentType = response.headers.get("content-type") || "";
+            let data = null;
+            if (contentType.includes("application/json")) {
+                data = await response.json();
+            }
 
             if (!response.ok) {
-                throw new Error(data.error || "The cart could not be updated. Please try again.");
+                const message = (data && data.error)
+                    ? data.error
+                    : (response.status === 403
+                        ? "Permission denied (CSRF origin check failed). Please refresh and try again."
+                        : `Request failed with status ${response.status}. Please try again.`);
+                throw new Error(message);
+            }
+
+            if (!data) {
+                throw new Error("Invalid response received from the server.");
             }
 
             updateCartBadge(data.item_count);

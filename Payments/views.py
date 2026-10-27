@@ -1,17 +1,20 @@
 from decimal import Decimal
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
-from django.views.decorators.http import require_POST
-
+import json
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST, require_GET
+from django.views.decorators.csrf import csrf_exempt
 from Orders.models import Order, OrderItem
 from Products.cart_utils import get_session_cart
 from Products.models import Product
 from .forms import CustomerDeliveryInfor
 from .models import Delivery_infor
+from .daraja import stk_push, stk_query, DarajaError
+from .models import MpesaPayment
 
 
 DELIVERY_FEE = Decimal("0.00")
@@ -175,5 +178,96 @@ def confirm_order(request):
 
 
 # PAY WITH MPESA
-def pay_with_mpesa(request):
-    return render(request, "mpesa.html")
+@require_POST
+def initiate_payment(request, order_id):
+    order = get_object_or_404(Order, pk=order_id, customer=request.user)
+    body = json.loads(request.body or "{}")
+    amount = int(order.total_amount)
+
+
+    # TRY SENDING STK PUSH
+    try:
+        res = stk_push(body.get("phone", ""), amount, f"ORD{order.pk}", "Shop")
+    except DarajaError as e:
+        return JsonResponse({"ok": False, "error": str(e)}, status=400)
+
+    if res.get("ResponseCode") != "0":
+        return JsonResponse({"ok": False, "error": res.get("ResponseDescription")}, status=400)
+
+
+    # SAVE PAYMENT
+    payment = MpesaPayment.objects.create(
+        order=order, 
+        phone=body["phone"], 
+        amount=amount,
+        merchant_request_id=res["MerchantRequestID"],
+        checkout_request_id=res["CheckoutRequestID"],
+    )
+    return JsonResponse(
+        {"ok": True, "payment_id": payment.pk, "message": res.get("CustomerMessage")})
+
+
+
+
+
+STATUS_MAP = {0: "SUCCESS", 1032: "CANCELLED", 1037: "TIMEOUT"}
+
+
+
+def _apply_result(payment, code, desc, items=None, raw=None):
+    # Idempotent: safe if called by both callback and polling.
+    with transaction.atomic():
+        p = MpesaPayment.objects.select_for_update().get(pk=payment.pk)
+        if p.status != MpesaPayment.Status.PENDING:
+            return p
+        p.result_code, p.result_desc = code, desc
+        p.status = STATUS_MAP.get(code, "FAILED")
+        if raw is not None:
+            p.raw_callback = raw
+        if code == 0 and items:
+            meta = {i["Name"]: i.get("Value") for i in items}
+            p.mpesa_receipt = meta.get("MpesaReceiptNumber", "")
+            if int(meta.get("Amount", 0)) != p.amount:
+                p.status = "FAILED"
+                p.result_desc = "Amount mismatch - review manually"
+        p.save()
+        if p.status == "SUCCESS":
+            p.order.status = Order.Status.PAID
+            p.order.save()
+    return p
+
+
+
+# RESPONSE FROM MPESA DARAJA
+# External webhook evoked by Safaricom Servers
+@csrf_exempt
+@require_POST
+def mpesa_callback(request):
+    try:
+        raw = json.loads(request.body)
+        cb = raw["Body"]["stkCallback"]
+        payment = MpesaPayment.objects.get(checkout_request_id=cb["CheckoutRequestID"])
+    except (KeyError, ValueError, MpesaPayment.DoesNotExist):
+        return JsonResponse({"ResultCode": 0, "ResultDesc": "Accepted"})  # don't leak info
+
+    items = cb.get("CallbackMetadata", {}).get("Item", [])
+    _apply_result(payment, cb["ResultCode"], cb["ResultDesc"], items, raw)
+    return JsonResponse({"ResultCode": 0, "ResultDesc": "Accepted"})
+
+
+
+# QUERY TRANSACTION STATUS
+@require_GET
+def payment_status(request, payment_id):
+    # Frontend polls this every ~3s. Falls back to querying Safaricom
+    p = get_object_or_404(MpesaPayment, pk=payment_id, order__customer=request.user)
+    if p.status == "PENDING":
+        age = (p.updated_at.now() - p.created_at).total_seconds() if False else None
+        try:
+            q = stk_query(p.checkout_request_id)
+            if "ResultCode" in q:
+                _apply_result(p, int(q["ResultCode"]), q.get("ResultDesc", ""))
+                p.refresh_from_db()
+        except DarajaError:
+            pass
+    return JsonResponse({"status": p.status, "receipt": p.mpesa_receipt, "message": p.result_desc})

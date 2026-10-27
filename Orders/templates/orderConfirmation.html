@@ -70,9 +70,11 @@
                     This order is awaiting payment.
                 </p>
 
-                <a href="{% url 'payments:mpesa' %}" class="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-agri-forest px-4 py-2 text-sm font-bold text-white transition hover:bg-agri-leaf">
+                {% if order.status == "awaiting_payment" %}
+                <a href="{% url 'payments:mpesa' order_id=order.id %}" class="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-agri-forest px-4 py-2 text-sm font-bold text-white transition hover:bg-agri-leaf">
                     Proceed to Pay with Mpesa
                 </a>
+                {% endif %}
                 <a href="{% url 'products:products' %}" class="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-agri-forest px-4 py-2 text-sm font-bold text-white transition hover:bg-agri-leaf">
                     Continue shopping
                 </a>
