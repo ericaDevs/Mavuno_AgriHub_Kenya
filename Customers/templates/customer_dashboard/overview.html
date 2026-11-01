@@ -1,0 +1,184 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f3e8">
+    <title>My dashboard | Mavuno AgriHub</title>
+    <link href="{% static 'style/output.css' %}" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-agri-cream font-sans text-agri-forest antialiased">
+    <div class="min-h-screen lg:flex">
+        <aside class="hidden w-64 shrink-0 flex-col border-r border-agri-forest/10 bg-white lg:flex">
+            <a href="{% url 'home' %}" class="flex h-[76px] items-center gap-3 border-b border-agri-forest/10 px-6">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-forest text-agri-harvest">
+                    <i data-lucide="sprout" class="h-5 w-5"></i>
+                </span>
+                <span>
+                    <span class="block text-sm font-extrabold tracking-wide">MAVUNO</span>
+                    <span class="block text-[11px] font-bold uppercase tracking-[0.16em] text-agri-forest/50">Customer space</span>
+                </span>
+            </a>
+            <nav aria-label="Customer navigation" class="flex-1 px-4 py-6">
+                <p class="mb-3 px-3 text-[11px] font-extrabold uppercase tracking-[0.16em] text-agri-forest/45">Your account</p>
+                <div class="space-y-1">
+                    <a href="{% url 'authentication:dashboard' %}" aria-current="page" class="flex items-center gap-3 rounded-xl bg-agri-forest px-3 py-2.5 text-sm font-bold text-white">
+                        <i data-lucide="layout-dashboard" class="h-[18px] w-[18px]"></i>Overview
+                    </a>
+                    <a href="#recent-orders" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-agri-forest/65 transition hover:bg-agri-cream hover:text-agri-forest">
+                        <i data-lucide="package-check" class="h-[18px] w-[18px]"></i>My orders
+                    </a>
+                    <a href="{% url 'products:cart' %}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-agri-forest/65 transition hover:bg-agri-cream hover:text-agri-forest">
+                        <i data-lucide="shopping-cart" class="h-[18px] w-[18px]"></i>Shopping cart
+                    </a>
+                    <a href="{% url 'products:products' %}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-agri-forest/65 transition hover:bg-agri-cream hover:text-agri-forest">
+                        <i data-lucide="store" class="h-[18px] w-[18px]"></i>Browse products
+                    </a>
+                </div>
+                <div class="mt-8 rounded-2xl border border-agri-forest/10 bg-agri-cream p-4">
+                    <div class="flex items-center gap-2 text-xs font-extrabold">
+                        <span class="h-2 w-2 rounded-full bg-agri-leaf"></span>Your account is ready
+                    </div>
+                    <p class="mt-2 text-xs leading-5 text-agri-forest/60">Your orders and payment updates will appear here.</p>
+                </div>
+            </nav>
+            <div class="border-t border-agri-forest/10 p-4">
+                <div class="flex items-center gap-3">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-agri-harvest/30 text-sm font-extrabold">{{ display_name|first|upper }}</span>
+                    <span class="min-w-0 flex-1">
+                        <span class="block truncate text-sm font-extrabold">{{ display_name }}</span>
+                        <span class="block truncate text-xs text-agri-forest/55">Customer account</span>
+                    </span>
+                    <a href="{% url 'authentication:logout' %}" aria-label="Log out" class="rounded-lg p-2 text-agri-forest/50 transition hover:bg-agri-cream hover:text-agri-forest">
+                        <i data-lucide="log-out" class="h-5 w-5"></i>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <div class="min-w-0 flex-1">
+            <header class="sticky top-0 z-20 border-b border-agri-forest/10 bg-white/95 backdrop-blur">
+                <div class="flex h-[76px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+                    <div class="flex min-w-0 items-center gap-3">
+                        <a href="{% url 'home' %}" class="text-xs font-extrabold tracking-wide lg:hidden">MAVUNO</a>
+                        <div class="hidden text-sm text-agri-forest/50 sm:block">My account <span class="mx-2 text-agri-forest/25">/</span> <span class="font-bold text-agri-forest">Overview</span></div>
+                        <div class="text-sm font-extrabold lg:hidden">Customer dashboard</div>
+                    </div>
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <a href="{% url 'products:products' %}" class="inline-flex items-center gap-2 rounded-xl border border-agri-forest/10 px-3 py-2 text-xs font-extrabold transition hover:bg-agri-cream sm:px-4 sm:text-sm">
+                            <i data-lucide="store" class="h-4 w-4"></i><span>Shop</span>
+                        </a>
+                        <a href="{% url 'authentication:logout' %}" class="inline-flex items-center gap-2 rounded-xl bg-agri-forest px-3 py-2 text-xs font-extrabold text-white transition hover:bg-agri-leaf sm:px-4 sm:text-sm">
+                            <i data-lucide="log-out" class="h-4 w-4"></i><span>Log out</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <main class="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-9 lg:px-8" id="main-content">
+                <section aria-labelledby="page-title">
+                    <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-agri-leaf">Customer overview</p>
+                            <h1 id="page-title" class="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">Welcome, {{ display_name }} <span aria-hidden="true">🌱</span></h1>
+                            <p class="mt-1 text-sm text-agri-forest/55">Your orders, payments, and shopping all in one place.</p>
+                        </div>
+                        <div class="flex items-center gap-2 self-start rounded-xl border border-agri-forest/10 bg-white px-3 py-2 text-sm font-bold text-agri-forest/65 sm:self-auto">
+                            <i data-lucide="calendar-days" class="h-4 w-4 text-agri-leaf"></i>{% now "j M Y" %}
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Orders placed</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="shopping-bag" class="h-5 w-5"></i></span></div>
+                            <p class="mt-4 text-2xl font-extrabold">{{ order_count }}</p><p class="mt-1 text-xs text-agri-forest/45">Your orders with Mavuno</p>
+                        </article>
+                        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Total spent</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="wallet" class="h-5 w-5"></i></span></div>
+                            <p class="mt-4 text-2xl font-extrabold">KSh {{ total_spent|floatformat:2 }}</p><p class="mt-1 text-xs text-agri-forest/45">On orders excluding cancelled ones</p>
+                        </article>
+                        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Active orders</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="truck" class="h-5 w-5"></i></span></div>
+                            <p class="mt-4 text-2xl font-extrabold">{{ active_order_count }}</p><p class="mt-1 text-xs text-agri-forest/45">Paid, processing, or on the way</p>
+                        </article>
+                        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Payments processing</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-harvest/20 text-agri-forest"><i data-lucide="clock-3" class="h-5 w-5"></i></span></div>
+                            <p class="mt-4 text-2xl font-extrabold">{{ pending_payment_count }}</p><p class="mt-1 text-xs text-agri-forest/45">Waiting for M-Pesa confirmation</p>
+                        </article>
+                    </div>
+
+                    <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(280px,0.8fr)]">
+                        <section id="recent-orders" class="overflow-hidden rounded-2xl border border-agri-forest/10 bg-white shadow-sm" aria-labelledby="orders-title">
+                            <div class="flex flex-col gap-3 border-b border-agri-forest/10 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                                <div><h2 id="orders-title" class="font-extrabold">Recent orders</h2><p class="mt-1 text-xs text-agri-forest/50">The latest updates on your purchases</p></div>
+                                <a href="{% url 'products:products' %}" class="inline-flex w-fit items-center gap-1 text-xs font-extrabold text-agri-leaf hover:text-agri-forest">Shop again <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></a>
+                            </div>
+                            {% if recent_orders %}
+                                <div class="divide-y divide-agri-forest/10">
+                                    {% for order in recent_orders %}
+                                        <article class="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                                            <div class="min-w-0">
+                                                <a href="{% url 'orders:order_confirmation' order_reference=order.order_reff %}" class="text-sm font-extrabold hover:text-agri-leaf">Order #{{ order.order_reff|slice:":8" }}</a>
+                                                <p class="mt-1 text-xs text-agri-forest/50">{{ order.created_time|date:"j M Y, g:i A" }} <span class="mx-1">·</span> {{ order.items.count }} item{{ order.items.count|pluralize }}</p>
+                                            </div>
+                                            <div class="flex items-center justify-between gap-4 sm:justify-end">
+                                                <span class="rounded-full bg-agri-cream px-3 py-1 text-xs font-bold capitalize">{{ order.get_status_display }}</span>
+                                                <span class="text-sm font-extrabold">KSh {{ order.total_amount|floatformat:2 }}</span>
+                                                <a href="{% url 'orders:order_confirmation' order_reference=order.order_reff %}" aria-label="View order {{ order.order_reff }}" class="rounded-lg p-2 text-agri-forest/50 hover:bg-agri-cream hover:text-agri-forest"><i data-lucide="arrow-up-right" class="h-4 w-4"></i></a>
+                                            </div>
+                                        </article>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="flex min-h-[230px] flex-col items-center justify-center px-6 py-10 text-center">
+                                    <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-agri-cream text-agri-leaf"><i data-lucide="package-open" class="h-6 w-6"></i></span>
+                                    <h3 class="mt-4 text-sm font-extrabold">Your first order starts here</h3>
+                                    <p class="mt-1 max-w-sm text-xs leading-5 text-agri-forest/50">Explore quality farm inputs and keep track of every purchase from this dashboard.</p>
+                                    <a href="{% url 'products:products' %}" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-agri-forest px-4 py-2.5 text-xs font-extrabold text-white transition hover:bg-agri-leaf"><i data-lucide="store" class="h-4 w-4"></i>Browse products</a>
+                                </div>
+                            {% endif %}
+                        </section>
+
+                        <section class="rounded-2xl border border-agri-forest/10 bg-white shadow-sm" aria-labelledby="shortcuts-title">
+                            <div class="border-b border-agri-forest/10 px-5 py-4">
+                                <h2 id="shortcuts-title" class="font-extrabold">Quick actions</h2>
+                                <p class="mt-1 text-xs text-agri-forest/50">Get to what you need faster</p>
+                            </div>
+                            <div class="space-y-3 p-5">
+                                <a href="{% url 'products:products' %}" class="group flex items-center gap-3 rounded-xl border border-agri-forest/10 p-3 transition hover:border-agri-leaf/40 hover:bg-agri-cream/60">
+                                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="sprout" class="h-5 w-5"></i></span>
+                                    <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold">Browse farm products</span><span class="mt-0.5 block text-xs text-agri-forest/50">Seeds, tools, fertilizers, and more</span></span>
+                                    <i data-lucide="chevron-right" class="h-4 w-4 text-agri-forest/40 transition group-hover:translate-x-0.5"></i>
+                                </a>
+                                <a href="{% url 'products:cart' %}" class="group flex items-center gap-3 rounded-xl border border-agri-forest/10 p-3 transition hover:border-agri-leaf/40 hover:bg-agri-cream/60">
+                                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="shopping-cart" class="h-5 w-5"></i></span>
+                                    <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold">View your cart</span><span class="mt-0.5 block text-xs text-agri-forest/50">Review items before checkout</span></span>
+                                    <i data-lucide="chevron-right" class="h-4 w-4 text-agri-forest/40 transition group-hover:translate-x-0.5"></i>
+                                </a>
+                                <a href="{% url 'contacts' %}" class="group flex items-center gap-3 rounded-xl border border-agri-forest/10 p-3 transition hover:border-agri-leaf/40 hover:bg-agri-cream/60">
+                                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="message-circle" class="h-5 w-5"></i></span>
+                                    <span class="min-w-0 flex-1"><span class="block text-sm font-extrabold">Get help</span><span class="mt-0.5 block text-xs text-agri-forest/50">Talk to the Mavuno team</span></span>
+                                    <i data-lucide="chevron-right" class="h-4 w-4 text-agri-forest/40 transition group-hover:translate-x-0.5"></i>
+                                </a>
+                            </div>
+                            <div class="mx-5 mb-5 rounded-xl bg-agri-cream/70 p-4">
+                                <div class="flex items-center gap-2 text-xs font-extrabold"><i data-lucide="shield-check" class="h-4 w-4 text-agri-leaf"></i>Secure checkout</div>
+                                <p class="mt-1 text-xs leading-5 text-agri-forest/55">Pay with M-Pesa and follow your payment status right here.</p>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.lucide && typeof window.lucide.createIcons === "function") {
+                window.lucide.createIcons({ attrs: { width: 18, height: 18 } });
+            }
+        });
+    </script>
+</body>
+</html>

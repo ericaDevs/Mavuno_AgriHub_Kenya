@@ -1,10 +1,8 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from .models import Order
 
 
-# Create your views here.
 @login_required(login_url="authentication:login")
 def order_confirmation(request, order_reference):
     order = get_object_or_404(
@@ -12,4 +10,12 @@ def order_confirmation(request, order_reference):
         order_reff=order_reference,
         customer=request.user,
     )
-    return render(request, "orderConfirmation.html", {"order": order})
+    payment = order.mpesa_payments.filter(status="SUCCESS").order_by("-created_at").first()
+    return render(
+        request,
+        "orderConfirmation.html",
+        {
+            "order": order,
+            "payment": payment,
+        },
+    )

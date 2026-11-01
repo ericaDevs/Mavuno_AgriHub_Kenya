@@ -9,8 +9,8 @@
     </head>
     <body class="min-h-screen bg-agri-cream font-sans text-agri-forest antialiased">
         <header class="absolute inset-x-0 top-0 z-10 pt-7 sm:pt-9">
-            <nav aria-label="Main navigation" class="flex w-full items-center justify-between">
-                <a class="text-lg font-extrabold px-4 tracking-wide text-white sm:text-xl" href="{% url 'home' %}">MAVUNO AGRIHUB</a>
+            <nav aria-label="Main navigation" class="flex w-full items-center justify-between gap-2">
+                <a class="whitespace-nowrap px-2 text-base font-extrabold tracking-wide text-white sm:px-4 sm:text-xl" href="{% url 'home' %}">MAVUNO AGRIHUB</a>
                 <div class="hidden items-center gap-8 text-sm font-medium text-white md:flex">
                     <a class="transition hover:text-agri-harvest" href="{% url 'home' %}">Home</a>
                     <a class="transition hover:text-agri-harvest" href="{% url 'products:products' %}">Catalog</a>
@@ -19,14 +19,35 @@
                     <a class="transition hover:text-agri-harvest" href="{% url 'contacts' %}">Contact</a>
                 </div>
 
-                <div class="flex items-center gap-4 px-8">
-                    <a class="rounded-full border border-agri-harvest px-8 py-2 text-sm font-bold text-white transition hover:bg-agri-harvest hover:text-agri-forest" href="{% url 'home' %}">
+                <div class="flex shrink-0 items-center gap-2 px-2 sm:gap-4 sm:px-4">
+                    <a class="hidden rounded-full border border-agri-harvest px-5 py-2 text-sm font-bold text-white transition hover:bg-agri-harvest hover:text-agri-forest md:inline-flex lg:px-8" href="{% url 'authentication:register' %}">
                         Get Started
                     </a>
 
-                    <a class="rounded-full border border-agri-harvest px-8 py-2 text-sm font-bold text-white transition hover:bg-agri-harvest hover:text-agri-forest" href="{% url 'home' %}">
+                    <a class="hidden rounded-full border border-agri-harvest px-5 py-2 text-sm font-bold text-white transition hover:bg-agri-harvest hover:text-agri-forest md:inline-flex lg:px-8" href="{% url 'authentication:login' %}">
                         Sign In
                     </a>
+
+                    <details class="relative md:hidden">
+                        <summary aria-label="Open site navigation" class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border border-white/40 text-white hover:bg-white/10">
+                            <i data-lucide="menu" class="h-5 w-5"></i>
+                        </summary>
+                        <nav aria-label="Mobile main navigation" class="absolute right-0 top-12 z-30 w-56 rounded-2xl border border-agri-forest/10 bg-white p-2 text-agri-forest shadow-xl">
+                            <a class="block rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-agri-cream" href="{% url 'home' %}">Home</a>
+                            <a class="block rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-agri-cream" href="{% url 'products:products' %}">Catalog</a>
+                            <a class="block rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-agri-cream" href="{% url 'services' %}">Services</a>
+                            <a class="block rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-agri-cream" href="{% url 'about' %}">About</a>
+                            <a class="block rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-agri-cream" href="{% url 'contacts' %}">Contact</a>
+                            <div class="my-1 border-t border-agri-forest/10"></div>
+                            {% if user.is_authenticated %}
+                                <a class="block rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-agri-cream" href="{% url 'authentication:dashboard' %}">My dashboard</a>
+                                <a class="block rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-agri-cream" href="{% url 'authentication:logout' %}">Log out</a>
+                            {% else %}
+                                <a class="block rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-agri-cream" href="{% url 'authentication:register' %}">Create account</a>
+                                <a class="block rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-agri-cream" href="{% url 'authentication:login' %}">Sign in</a>
+                            {% endif %}
+                        </nav>
+                    </details>
 
                     <a data-cart-link data-count="{{ cart_item_count }}" href="{% url 'products:cart' %}" aria-label="Shopping cart, {{ cart_item_count }} {% if cart_item_count == 1 %}item{% else %}items{% endif %}" class="relative rounded-full p-2 text-agri-forest bg-agri-harvest">
                         <i data-lucide="shopping-cart"></i>

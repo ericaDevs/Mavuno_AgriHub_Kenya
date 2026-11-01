@@ -7,7 +7,8 @@ app_name = "payments"
 urlpatterns = [
     path("checkout/", views.checkout_page, name="checkout"),
     path("checkout/confirm/", views.confirm_order, name="confirm_order"),
-    path("mpesa/pay/<int:order_id>/", views.initiate_payment, name = "mpesa"),
+    path("mpesa/pay/", views.initiate_payment, name="mpesa"),
+    path("mpesa/pay/<int:order_id>/", views.initiate_payment, name="mpesa_order"),
     path("mpesa/callback/", views.mpesa_callback, name="mpesa_callback"),
     path("mpesa/status/<int:payment_id>/", views.payment_status, name="payment_status"),
 ]

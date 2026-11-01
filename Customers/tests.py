@@ -88,6 +88,44 @@ class CustomerAuthenticationTests(TestCase):
 
         self.assertRedirects(
             response,
-            reverse("home"),
+            reverse("authentication:dashboard"),
             fetch_redirect_response=False,
         )
+
+    def test_dashboard_requires_login(self):
+        response = self.client.get(reverse("authentication:dashboard"))
+
+        self.assertRedirects(
+            response,
+            f"{reverse('authentication:login')}?next={reverse('authentication:dashboard')}",
+            fetch_redirect_response=False,
+        )
+
+    def test_dashboard_shows_customer_order_metrics_and_recent_orders(self):
+        from decimal import Decimal
+
+        from Orders.models import Order
+
+        user = get_user_model().objects.create_user(
+            username="dashboardcustomer",
+            email="dashboard@example.com",
+            password="StrongPass!123",
+        )
+        self.client.force_login(user)
+        order = Order.objects.create(
+            customer=user,
+            status=Order.Status.SHIPPED,
+            item_subtotal=Decimal("1250.00"),
+            delivery_fee=Decimal("0.00"),
+            total_amount=Decimal("1250.00"),
+        )
+
+        response = self.client.get(reverse("authentication:dashboard"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["order_count"], 1)
+        self.assertEqual(response.context["total_spent"], Decimal("1250.00"))
+        self.assertEqual(response.context["active_order_count"], 1)
+        self.assertEqual(list(response.context["recent_orders"]), [order])
+        self.assertContains(response, order.order_reff)
+        self.assertContains(response, "dashboardcustomer")

@@ -46,6 +46,10 @@
                             <i data-lucide="chart-no-axes-combined" class="h-[18px] w-[18px]"></i>
                             Sales analytics
                         </a>
+                        <a href="{% url 'admin:customers' %}" {% block customers_current %}{% endblock %} class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-agri-forest/65 transition hover:bg-agri-cream hover:text-agri-forest {% block customers_active %}{% endblock %}">
+                            <i data-lucide="users-round" class="h-[18px] w-[18px]"></i>
+                            Customers
+                        </a>
                     </div>
 
                     <div class="mt-8 rounded-2xl border border-agri-forest/10 bg-agri-cream p-4">
@@ -88,6 +92,7 @@
                                     <a href="{% url 'admin:orders' %}" class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-agri-forest hover:bg-agri-cream"><i data-lucide="shopping-bag" class="h-4 w-4"></i>Orders</a>
                                     <a href="{% url 'admin:inventory' %}" class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-agri-forest hover:bg-agri-cream"><i data-lucide="boxes" class="h-4 w-4"></i>Inventory</a>
                                     <a href="{% url 'admin:sales' %}" class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-agri-forest hover:bg-agri-cream"><i data-lucide="chart-no-axes-combined" class="h-4 w-4"></i>Sales analytics</a>
+                                    <a href="{% url 'admin:customers' %}" class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-agri-forest hover:bg-agri-cream"><i data-lucide="users-round" class="h-4 w-4"></i>Customers</a>
                                 </nav>
                             </details>
                             <div class="hidden text-sm text-agri-forest/50 sm:block">Workspace <span class="mx-2 text-agri-forest/25">/</span> <span class="font-bold text-agri-forest">{% block breadcrumb %}Overview{% endblock %}</span></div>

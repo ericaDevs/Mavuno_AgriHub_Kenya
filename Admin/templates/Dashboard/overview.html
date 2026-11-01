@@ -19,22 +19,26 @@
         </div>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
             <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Total revenue</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="wallet" class="h-5 w-5"></i></span></div>
-            <p class="mt-4 text-2xl font-extrabold">KSh 0.00</p><p class="mt-1 text-xs text-agri-forest/45">All-time store revenue</p>
+            <p class="mt-4 text-2xl font-extrabold">KSh {{ total_revenue|floatformat:2 }}</p><p class="mt-1 text-xs text-agri-forest/45">Excludes cancelled orders</p>
         </article>
         <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
             <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Total orders</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="shopping-bag" class="h-5 w-5"></i></span></div>
-            <p class="mt-4 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Orders placed in your store</p>
+            <p class="mt-4 text-2xl font-extrabold">{{ total_orders }}</p><p class="mt-1 text-xs text-agri-forest/45">Orders placed in your store</p>
+        </article>
+        <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
+            <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Customers</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="users-round" class="h-5 w-5"></i></span></div>
+            <p class="mt-4 text-2xl font-extrabold">{{ total_customers }}</p><p class="mt-1 text-xs text-agri-forest/45"><a href="{% url 'admin:customers' %}" class="font-bold text-agri-leaf hover:text-agri-forest">View customer activity</a></p>
         </article>
         <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
             <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Products listed</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="package" class="h-5 w-5"></i></span></div>
-            <p class="mt-4 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Active products in the catalog</p>
+            <p class="mt-4 text-2xl font-extrabold">{{ active_products }}</p><p class="mt-1 text-xs text-agri-forest/45">Active products in the catalog</p>
         </article>
         <article class="rounded-2xl border border-agri-forest/10 bg-white p-5 shadow-sm">
             <div class="flex items-center justify-between"><span class="text-sm font-bold text-agri-forest/60">Low stock items</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-harvest/20 text-agri-forest"><i data-lucide="triangle-alert" class="h-5 w-5"></i></span></div>
-            <p class="mt-4 text-2xl font-extrabold">0</p><p class="mt-1 text-xs text-agri-forest/45">Products that need replenishing</p>
+            <p class="mt-4 text-2xl font-extrabold">{{ low_stock_products }}</p><p class="mt-1 text-xs text-agri-forest/45">Active products with 1–5 units</p>
         </article>
     </div>
 
@@ -54,9 +58,26 @@
         <section class="rounded-2xl border border-agri-forest/10 bg-white shadow-sm">
             <div class="flex items-center justify-between border-b border-agri-forest/10 px-5 py-4">
                 <div><h2 class="font-extrabold">Recent orders</h2><p class="mt-1 text-xs text-agri-forest/50">Keep track of incoming purchases</p></div>
-                <a href="#main-content" class="inline-flex items-center gap-1 text-xs font-extrabold text-agri-leaf hover:text-agri-forest">View all <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></a>
+                <a href="{% url 'admin:orders' %}" class="inline-flex items-center gap-1 text-xs font-extrabold text-agri-leaf hover:text-agri-forest">View all <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></a>
             </div>
-            <div class="flex min-h-[220px] flex-col items-center justify-center px-5 py-8 text-center"><i data-lucide="inbox" class="h-8 w-8 text-agri-forest/25"></i><p class="mt-3 text-sm font-bold">No orders yet</p><p class="mt-1 text-xs text-agri-forest/50">New orders will appear here.</p></div>
+            {% if recent_orders %}
+                <div class="divide-y divide-agri-forest/10">
+                    {% for order in recent_orders %}
+                        <article class="flex items-start justify-between gap-3 px-5 py-4">
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-extrabold">#{{ order.order_reff|slice:":8" }} <span class="font-medium text-agri-forest/55">· {{ order.customer.username }}</span></p>
+                                <p class="mt-1 text-xs text-agri-forest/50">{{ order.created_time|date:"j M Y" }} · {{ order.items.count }} item{{ order.items.count|pluralize }}</p>
+                            </div>
+                            <div class="shrink-0 text-right">
+                                <p class="text-sm font-extrabold">KSh {{ order.total_amount|floatformat:2 }}</p>
+                                <p class="mt-1 text-xs capitalize text-agri-forest/50">{{ order.get_status_display }}</p>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="flex min-h-[220px] flex-col items-center justify-center px-5 py-8 text-center"><i data-lucide="inbox" class="h-8 w-8 text-agri-forest/25"></i><p class="mt-3 text-sm font-bold">No orders yet</p><p class="mt-1 text-xs text-agri-forest/50">New orders will appear here.</p></div>
+            {% endif %}
         </section>
     </div>
 
@@ -67,8 +88,8 @@
         </div>
         <div class="grid divide-y divide-agri-forest/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             <div class="flex items-center gap-3 p-5"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="package-check" class="h-5 w-5"></i></span><span><span class="block text-sm font-extrabold">Product catalog</span><span class="mt-0.5 block text-xs text-agri-forest/50">Ready to add products</span></span></div>
-            <div class="flex items-center gap-3 p-5"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="clipboard-list" class="h-5 w-5"></i></span><span><span class="block text-sm font-extrabold">Order processing</span><span class="mt-0.5 block text-xs text-agri-forest/50">No orders need attention</span></span></div>
-            <div class="flex items-center gap-3 p-5"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="warehouse" class="h-5 w-5"></i></span><span><span class="block text-sm font-extrabold">Stock levels</span><span class="mt-0.5 block text-xs text-agri-forest/50">No stock alerts</span></span></div>
+            <div class="flex items-center gap-3 p-5"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="clipboard-list" class="h-5 w-5"></i></span><span><span class="block text-sm font-extrabold">Payment processing</span><span class="mt-0.5 block text-xs text-agri-forest/50">{{ pending_payments }} M-Pesa payment{{ pending_payments|pluralize }} pending</span></span></div>
+            <div class="flex items-center gap-3 p-5"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-agri-cream text-agri-leaf"><i data-lucide="warehouse" class="h-5 w-5"></i></span><span><span class="block text-sm font-extrabold">Stock levels</span><span class="mt-0.5 block text-xs text-agri-forest/50">{{ low_stock_products }} product{{ low_stock_products|pluralize }} need replenishing</span></span></div>
         </div>
     </section>
 </section>

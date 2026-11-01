@@ -1,10 +1,17 @@
 from functools import wraps
+from datetime import timedelta
 
+from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.db import transaction
+from django.db.models import Count, Max, Q, Sum
 from django.shortcuts import get_object_or_404, render, redirect
+from django.utils import timezone
+from django.core.paginator import Paginator
 
+from Orders.models import Order
+from Payments.models import MpesaPayment
 from .forms import CustomUserCreationForm, LoginForm
 from .models import Admins
 from Products.forms import ProductForm
@@ -167,7 +174,84 @@ def product_delete(request, product_id):
 
 @admin_required
 def overview(request):
-    return render(request, "Dashboard/overview.html")
+    revenue = (
+        Order.objects.exclude(status=Order.Status.CANCELLED)
+        .aggregate(total=Sum("total_amount"))["total"]
+        or 0
+    )
+    recent_orders = (
+        Order.objects.select_related("customer")
+        .prefetch_related("items")
+        .order_by("-created_time")[:5]
+    )
+    context = {
+        "total_revenue": revenue,
+        "total_orders": Order.objects.count(),
+        "total_customers": get_user_model().objects.filter(
+            is_staff=False,
+            is_superuser=False,
+        ).count(),
+        "active_products": Product.objects.filter(is_active=True).count(),
+        "low_stock_products": Product.objects.filter(
+            is_active=True,
+            stock_quantity__gt=0,
+            stock_quantity__lte=5,
+        ).count(),
+        "pending_payments": MpesaPayment.objects.filter(
+            status=MpesaPayment.Status.PENDING,
+        ).count(),
+        "recent_orders": recent_orders,
+    }
+    return render(request, "Dashboard/overview.html", context)
+
+
+@admin_required
+def customers(request):
+    User = get_user_model()
+    customer_records = User.objects.filter(
+        is_staff=False,
+        is_superuser=False,
+    )
+    search = request.GET.get("q", "").strip()
+    if search:
+        customer_records = customer_records.filter(
+            Q(username__icontains=search) | Q(email__icontains=search)
+        )
+
+    customer_records = customer_records.annotate(
+        order_count=Count("orders", distinct=True),
+        payment_count=Count("mpesa_payments", distinct=True),
+        last_order_at=Max("orders__created_time"),
+        last_payment_at=Max("mpesa_payments__created_at"),
+    ).order_by("-date_joined")
+    page_obj = Paginator(customer_records, 20).get_page(request.GET.get("page"))
+
+    activity_since = timezone.now() - timedelta(days=30)
+    context = {
+        "customers": page_obj,
+        "page_obj": page_obj,
+        "search": search,
+        "total_customers": User.objects.filter(
+            is_staff=False,
+            is_superuser=False,
+        ).count(),
+        "new_customers": User.objects.filter(
+            is_staff=False,
+            is_superuser=False,
+            date_joined__gte=activity_since,
+        ).count(),
+        "active_customers": User.objects.filter(
+            is_staff=False,
+            is_superuser=False,
+            last_login__gte=activity_since,
+        ).count(),
+        "customers_with_orders": User.objects.filter(
+            is_staff=False,
+            is_superuser=False,
+            orders__isnull=False,
+        ).distinct().count(),
+    }
+    return render(request, "Dashboard/customers.html", context)
 
 
 @admin_required

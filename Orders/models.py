@@ -14,6 +14,7 @@ def generate_order_reference():
 class Order(models.Model):
     class Status(models.TextChoices):
         AWAITING_PAYMENT = "awaiting_payment", "Awaiting payment"
+        PAID = "paid", "Paid"
         PROCESSING = "processing", "Processing"
         SHIPPED = "shipped", "Shipped"
         DELIVERED = "delivered", "Delivered"
@@ -32,7 +33,7 @@ class Order(models.Model):
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
-        default=Status.AWAITING_PAYMENT,
+        default=Status.PAID,
     )
     item_subtotal = models.DecimalField(
         max_digits=10,
