@@ -30,13 +30,20 @@ def get_access_token() -> str:
     # Tokens last ~1 hour; cache to avoid hitting the auth endpoint per payment
     if _token["value"] and time.time() < _token["expires_at"]:
         return _token["value"]
-    r = requests.get(
-        f"{BASE}/oauth/v1/generate?grant_type=client_credentials",
-        auth=(settings.MPESA_CONSUMER_KEY, settings.MPESA_CONSUMER_SECRET),
-        timeout=15,
-    )
-    r.raise_for_status()
-    data = r.json()
+    if not settings.MPESA_CONSUMER_KEY or not settings.MPESA_CONSUMER_SECRET:
+        raise DarajaError("M-Pesa consumer credentials are not configured")
+    try:
+        r = requests.get(
+            f"{BASE}/oauth/v1/generate?grant_type=client_credentials",
+            auth=(settings.MPESA_CONSUMER_KEY, settings.MPESA_CONSUMER_SECRET),
+            timeout=15,
+        )
+        r.raise_for_status()
+        data = r.json()
+    except (requests.RequestException, ValueError) as exc:
+        raise DarajaError(f"Could not get M-Pesa access token: {exc}") from exc
+    if not data.get("access_token"):
+        raise DarajaError("M-Pesa did not return an access token")
     _token["value"] = data["access_token"]
     _token["expires_at"] = time.time() + int(data.get("expires_in", 3599)) - 60
     return _token["value"]

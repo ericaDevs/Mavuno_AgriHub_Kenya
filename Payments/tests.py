@@ -1,4 +1,6 @@
+import json
 from decimal import Decimal
+from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -6,7 +8,7 @@ from django.urls import reverse
 
 from Orders.models import Order, OrderItem
 from Products.models import Product
-from .models import Delivery_infor
+from .models import Delivery_infor, MpesaPayment
 
 
 class CheckoutTests(TestCase):
@@ -91,7 +93,7 @@ class CheckoutTests(TestCase):
         review_response = self.client.get(reverse("payments:checkout"))
 
         self.assertContains(review_response, "Jane Customer")
-        self.assertContains(review_response, "Confirm order (payment not requested)")
+        self.assertContains(review_response, "Confirm and Continue to Pay")
         self.assertEqual(review_response.context["delivery_data"]["phone"], "+254712345678")
 
     def test_confirm_order_creates_order_items_and_delivery_atomically(self):
@@ -134,7 +136,7 @@ class CheckoutTests(TestCase):
         self.assertEqual(confirmation.status_code, 200)
         self.assertContains(confirmation, order.order_reff)
         self.assertContains(confirmation, "Awaiting payment")
-        self.assertContains(confirmation, "Payment has not been requested or processed.")
+        self.assertContains(confirmation, "Complete payment below to confirm it.")
 
     def test_confirmation_requires_delivery_data_and_post(self):
         response = self.client.post(reverse("payments:confirm_order"))
@@ -184,3 +186,67 @@ class CheckoutTests(TestCase):
         self.assertEqual(Order.objects.count(), 0)
         self.assertEqual(OrderItem.objects.count(), 0)
         self.assertEqual(Delivery_infor.objects.count(), 0)
+
+    @patch("Payments.views.stk_push")
+    def test_mpesa_endpoint_requests_payment_and_reuses_pending_request(self, stk_push):
+        self.save_delivery_details()
+        self.client.post(reverse("payments:confirm_order"))
+        order = Order.objects.get()
+        stk_push.return_value = {
+            "ResponseCode": "0",
+            "MerchantRequestID": "merchant-1",
+            "CheckoutRequestID": "checkout-1",
+            "CustomerMessage": "Prompt sent",
+        }
+        url = reverse("payments:mpesa", args=[order.pk])
+        request_body = json.dumps({"phone": "+254712345678"})
+
+        response = self.client.post(
+            url,
+            data=request_body,
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        first_result = response.json()
+        self.assertTrue(first_result["ok"])
+        payment = MpesaPayment.objects.get()
+        self.assertEqual(payment.phone, "254712345678")
+        self.assertEqual(
+            first_result["status_url"],
+            reverse("payments:payment_status", args=[payment.pk]),
+        )
+
+        repeated_response = self.client.post(
+            url,
+            data=request_body,
+            content_type="application/json",
+        )
+
+        self.assertEqual(repeated_response.status_code, 200)
+        self.assertEqual(repeated_response.json()["payment_id"], payment.pk)
+        self.assertEqual(MpesaPayment.objects.count(), 1)
+        stk_push.assert_called_once()
+
+    def test_mpesa_initiation_rejects_get_requests(self):
+        response = self.client.get(reverse("payments:mpesa", args=[1]))
+
+        self.assertEqual(response.status_code, 405)
+
+    @patch("Payments.views.stk_push")
+    def test_mpesa_initiation_rejects_fractional_shilling_total(self, stk_push):
+        self.save_delivery_details()
+        self.client.post(reverse("payments:confirm_order"))
+        order = Order.objects.get()
+        order.total_amount = Decimal("25.50")
+        order.save(update_fields=["total_amount"])
+
+        response = self.client.post(
+            reverse("payments:mpesa", args=[order.pk]),
+            data=json.dumps({"phone": "0712345678"}),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("whole-shilling", response.json()["error"])
+        stk_push.assert_not_called()

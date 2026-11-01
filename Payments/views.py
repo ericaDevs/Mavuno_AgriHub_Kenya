@@ -13,7 +13,7 @@ from Products.cart_utils import get_session_cart
 from Products.models import Product
 from .forms import CustomerDeliveryInfor
 from .models import Delivery_infor
-from .daraja import stk_push, stk_query, DarajaError
+from .daraja import normalize_phone, stk_push, stk_query, DarajaError
 from .models import MpesaPayment
 
 
@@ -178,33 +178,87 @@ def confirm_order(request):
 
 
 # PAY WITH MPESA
+@login_required(login_url="authentication:login")
 @require_POST
 def initiate_payment(request, order_id):
     order = get_object_or_404(Order, pk=order_id, customer=request.user)
-    body = json.loads(request.body or "{}")
+    try:
+        body = json.loads(request.body or "{}")
+    except ValueError:
+        return JsonResponse({"ok": False, "error": "Invalid request body"}, status=400)
+    if not isinstance(body, dict):
+        return JsonResponse({"ok": False, "error": "Invalid request body"}, status=400)
+
+    try:
+        phone = normalize_phone(body.get("phone", ""))
+    except DarajaError as e:
+        return JsonResponse({"ok": False, "error": str(e)}, status=400)
+
+    if order.total_amount != order.total_amount.to_integral_value():
+        return JsonResponse(
+            {
+                "ok": False,
+                "error": "M-Pesa STK payments require a whole-shilling order total.",
+            },
+            status=400,
+        )
     amount = int(order.total_amount)
+
+    pending_payment = order.mpesa_payments.filter(
+        status=MpesaPayment.Status.PENDING
+    ).order_by("-created_at").first()
+    if pending_payment:
+        return JsonResponse(
+            {
+                "ok": True,
+                "payment_id": pending_payment.pk,
+                "status_url": reverse("payments:payment_status", args=[pending_payment.pk]),
+                "success_url": reverse(
+                    "orders:order_confirmation",
+                    kwargs={"order_reference": order.order_reff},
+                ),
+                "message": "A payment request is already pending.",
+            }
+        )
+
+
 
 
     # TRY SENDING STK PUSH
     try:
-        res = stk_push(body.get("phone", ""), amount, f"ORD{order.pk}", "Shop")
+        res = stk_push(phone, amount, f"ORD{order.pk}", "Shop")
     except DarajaError as e:
         return JsonResponse({"ok": False, "error": str(e)}, status=400)
 
     if res.get("ResponseCode") != "0":
         return JsonResponse({"ok": False, "error": res.get("ResponseDescription")}, status=400)
+    if not res.get("MerchantRequestID") or not res.get("CheckoutRequestID"):
+        return JsonResponse(
+            {"ok": False, "error": "M-Pesa returned an incomplete payment response"},
+            status=502,
+        )
 
 
     # SAVE PAYMENT
     payment = MpesaPayment.objects.create(
-        order=order, 
-        phone=body["phone"], 
+        order=order,
+        phone=phone,
         amount=amount,
         merchant_request_id=res["MerchantRequestID"],
         checkout_request_id=res["CheckoutRequestID"],
     )
     return JsonResponse(
-        {"ok": True, "payment_id": payment.pk, "message": res.get("CustomerMessage")})
+        {
+            "ok": True,
+            "payment_id": payment.pk,
+            "status_url": reverse("payments:payment_status", args=[payment.pk]),
+            "success_url": reverse(
+                "orders:order_confirmation",
+                kwargs={"order_reference": order.order_reff},
+            ),
+            "message": res.get("CustomerMessage"),
+        }
+    )
 
 
 
@@ -257,6 +311,7 @@ def mpesa_callback(request):
 
 
 # QUERY TRANSACTION STATUS
+@login_required(login_url="authentication:login")
 @require_GET
 def payment_status(request, payment_id):
     # Frontend polls this every ~3s. Falls back to querying Safaricom
@@ -268,6 +323,14 @@ def payment_status(request, payment_id):
             if "ResultCode" in q:
                 _apply_result(p, int(q["ResultCode"]), q.get("ResultDesc", ""))
                 p.refresh_from_db()
-        except DarajaError:
-            pass
-    return JsonResponse({"status": p.status, "receipt": p.mpesa_receipt, "message": p.result_desc})
+        except DarajaError as e:
+            return JsonResponse(
+                {
+                    "status": p.status,
+                    "receipt": p.mpesa_receipt,
+                    "message": str(e),
+                }
+            )
+    return JsonResponse(
+        {"status": p.status, "receipt": p.mpesa_receipt, "message": p.result_desc}
+    )
