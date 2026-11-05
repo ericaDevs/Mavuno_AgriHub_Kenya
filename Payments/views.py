@@ -184,6 +184,10 @@ def _create_order_for_payment(payment):
     return order
 
 
+
+
+
+
 # PAY WITH MPESA
 @login_required(login_url="authentication:login")
 @require_POST
@@ -264,7 +268,7 @@ def initiate_payment(request, order_id=None):
                 }
             )
 
-    account_ref = f"M{request.user.pk}"
+    account_ref = "1332992706"
     try:
         res = stk_push(phone, amount, account_ref, "Mavuno AgriHub")
     except DarajaError as e:
