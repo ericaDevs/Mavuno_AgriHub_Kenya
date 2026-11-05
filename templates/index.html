@@ -11,26 +11,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="{% static 'style/output.css' %}" rel="stylesheet" />
+    <script src="{% static 'scripts/scroll-reveal.js' %}" defer></script>
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-        theme: {
-            extend: {
-            fontFamily: {
-                sans: ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-            },
-            colors: {
-                'agri-forest': '#003725',
-                'agri-leaf': '#5b8c36',
-                'agri-harvest': '#e7b844',
-                'agri-cream': '#f5f3e8',
-            }
-            }
-        }
-        }
-    </script>
 </head>
 <body class="font-sans bg-agri-cream text-neutral-800 antialiased selection:bg-agri-leaf selection:text-white">
 
@@ -43,7 +26,7 @@
             </a>
 
             <!-- Zone 2: Navigation Links -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-bold text-neutral-600">
+            <nav class="hidden lg:flex items-center gap-8 text-sm font-bold text-neutral-600">
                 <a href="{% url 'home' %}" class="hover:text-agri-forest transition-colors">Home</a>
                 <a href="{% url 'products:products' %}" class="hover:text-agri-forest transition-colors">Products</a>
                 <a href="{% url 'services' %}" class="hover:text-agri-forest transition-colors">What We Offer</a>
@@ -53,15 +36,15 @@
 
             <!-- Zone 3: Primary Action -->
             <div class="flex shrink-0 items-center gap-2 sm:gap-4">
-                <a href="{% url 'authentication:register' %}" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
+                <a href="{% url 'authentication:register' %}" class="hidden lg:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
                     Get Started
                 </a>
 
-                <a href="{% url 'authentication:login' %}" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
+                <a href="{% url 'authentication:login' %}" class="hidden lg:inline-flex items-center justify-center px-5 py-2.5 rounded-full font-bold text-white bg-agri-forest hover:bg-agri-forest/90 transition-all text-sm shadow-sm">
                     Sign In
                 </a>
 
-                <details class="relative md:hidden">
+                <details class="relative lg:hidden">
                     <summary aria-label="Open site navigation" class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border border-agri-forest/15 text-agri-forest hover:bg-agri-cream">
                         <i data-lucide="menu" class="h-5 w-5"></i>
                     </summary>
@@ -144,7 +127,7 @@
                 </div>
 
                 <div class="lg:col-span-7">
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="sm:hidden grid-cols-2 md:grid md:grid-cols-1 gap-4">
                         <div class="group relative overflow-hidden rounded-2xl bg-agri-cream shadow-sm sm:col-span-2">
                             <img src="https://i.pinimg.com/1200x/8d/cb/6d/8dcb6d6e74f2a0da9de97e28991d06b1.jpg" alt="Hands holding fresh organic lettuce" class="h-56 w-full object-cover object-center transition-transform duration-500 group-hover:scale-105 sm:h-64">
                             <div class="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-1.5 shadow-md backdrop-blur-sm">

@@ -6,12 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Home{% endblock %} | Mavuno Agrihub</title>
         <link href="{% static 'style/output.css' %}" rel="stylesheet">
+        <script src="{% static 'scripts/scroll-reveal.js' %}" defer></script>
     </head>
     <body class="min-h-screen bg-agri-cream font-sans text-agri-forest antialiased">
         <header class="absolute inset-x-0 top-0 z-10 pt-7 sm:pt-9">
             <nav aria-label="Main navigation" class="flex w-full items-center justify-between gap-2">
                 <a class="whitespace-nowrap px-2 text-base font-extrabold tracking-wide text-white sm:px-4 sm:text-xl" href="{% url 'home' %}">MAVUNO AGRIHUB</a>
-                <div class="hidden items-center gap-8 text-sm font-medium text-white md:flex">
+                <div class="hidden items-center gap-8 text-sm font-medium text-white lg:flex">
                     <a class="transition hover:text-agri-harvest" href="{% url 'home' %}">Home</a>
                     <a class="transition hover:text-agri-harvest" href="{% url 'products:products' %}">Catalog</a>
                     <a class="transition hover:text-agri-harvest" href="{% url 'services' %}">Services</a>
@@ -20,15 +21,15 @@
                 </div>
 
                 <div class="flex shrink-0 items-center gap-2 px-2 sm:gap-4 sm:px-4">
-                    <a class="hidden rounded-full border border-agri-harvest px-5 py-2 text-sm font-bold text-white transition hover:bg-agri-harvest hover:text-agri-forest md:inline-flex lg:px-8" href="{% url 'authentication:register' %}">
+                    <a class="hidden rounded-full border border-agri-harvest px-5 py-2 text-sm font-bold text-white transition hover:bg-agri-harvest hover:text-agri-forest lg:inline-flex lg:px-8" href="{% url 'authentication:register' %}">
                         Get Started
                     </a>
 
-                    <a class="hidden rounded-full border border-agri-harvest px-5 py-2 text-sm font-bold text-white transition hover:bg-agri-harvest hover:text-agri-forest md:inline-flex lg:px-8" href="{% url 'authentication:login' %}">
+                    <a class="hidden rounded-full border border-agri-harvest px-5 py-2 text-sm font-bold text-white transition hover:bg-agri-harvest hover:text-agri-forest lg:inline-flex lg:px-8" href="{% url 'authentication:login' %}">
                         Sign In
                     </a>
 
-                    <details class="relative md:hidden">
+                    <details class="relative lg:hidden">
                         <summary aria-label="Open site navigation" class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border border-white/40 text-white hover:bg-white/10">
                             <i data-lucide="menu" class="h-5 w-5"></i>
                         </summary>

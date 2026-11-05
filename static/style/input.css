@@ -8,3 +8,32 @@
   --color-agri-harvest: #e7b844;
   --color-agri-cream: #f5f3e8;
 }
+
+@layer components {
+  .scroll-reveal {
+    opacity: 0;
+    transform: translate3d(0, 1rem, 0);
+    transition: opacity 560ms ease, transform 560ms cubic-bezier(0.2, 0.65, 0.3, 1);
+  }
+
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 640px) {
+    .scroll-reveal {
+      transform: translate3d(0, 0.75rem, 0);
+      transition-duration: 420ms;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-reveal,
+    .scroll-reveal.is-visible {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+}
